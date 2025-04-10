@@ -24,9 +24,9 @@ export default function Map({ data }: MapProps){
           <Source type="geojson" data={data}>
             <Layer type="circle" 
               paint={{
-                "circle-color": "black",
+                "circle-color": "#020617",
                 "circle-radius": 5,
-                "circle-stroke-color": "white",
+                "circle-stroke-color": "#f8fafc",
                 "circle-stroke-width": 2,
               }}
             />

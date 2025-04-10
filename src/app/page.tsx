@@ -9,6 +9,9 @@ import { validateGeojson } from './lib/validate';
 
 export default function Home() {
   const [geojsonData, setGeojsonData] = useState<FeatureCollection | null>(null);
+  const [filename, setFilename] = useState<string>("");
+  const [error, setError] = useState<string>("");
+
   // handle file upload (parse as GeoJSON)
   async function handleFile(file: File){
     try {
@@ -18,12 +21,23 @@ export default function Home() {
       const json = JSON.parse(text);
       // validate as GeoJSON (FeatureCollection)
       const geojson: FeatureCollection = validateGeojson(json);
-
       console.log(geojson);
+      // update state
       setGeojsonData(geojson);
-    } catch(err){
+      setFilename(file.name);
+      setError("");
+    } catch(err: unknown){
       console.error(`Error while parsing file "${file.name}":`, err);
+      setGeojsonData(null);
+      setFilename("");
+      setError((err instanceof Error) ? `Error: ${err.message}` : `Error while parsing file.`);
     }
+  }
+
+  function handleReset(){
+    setGeojsonData(null);
+    setFilename("");
+    setError("");
   }
 
   return (
@@ -36,8 +50,9 @@ export default function Home() {
         <div className="w-[20%] h-full">
           <Sidebar 
             data={geojsonData} 
+            error={error}
             handleFile={handleFile}
-            clearFile={() => setGeojsonData(null)}
+            clearFile={handleReset}
           />
         </div>
       </main>
