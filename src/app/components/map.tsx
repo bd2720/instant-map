@@ -1,9 +1,14 @@
 "use client";
 
-import ReactMapGL from 'react-map-gl/mapbox';
+import ReactMapGL, { Source, Layer } from 'react-map-gl/mapbox';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import { FeatureCollection } from 'geojson';
 
-export default function Map(){
+interface MapProps {
+  data: FeatureCollection | null
+}
+
+export default function Map({ data }: MapProps){
   return (
       <ReactMapGL
         mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
@@ -14,6 +19,19 @@ export default function Map(){
           latitude: 40.68,
           zoom: 10,
         }}
-      />
+      >
+        {data && (
+          <Source type="geojson" data={data}>
+            <Layer type="circle" 
+              paint={{
+                "circle-color": "black",
+                "circle-radius": 5,
+                "circle-stroke-color": "white",
+                "circle-stroke-width": 2,
+              }}
+            />
+          </Source>
+        )}
+      </ReactMapGL>
   );
 }
