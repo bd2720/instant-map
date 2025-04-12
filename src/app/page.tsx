@@ -11,6 +11,21 @@ export default function Home() {
   const [geojsonData, setGeojsonData] = useState<FeatureCollection | null>(null);
   const [filename, setFilename] = useState<string>("");
   const [error, setError] = useState<string>("");
+  const [fileFormat, setFileFormat] = useState<"csv" | "geojson">("geojson");
+
+  function handleCSV(text: string){
+    // TODO
+  }
+
+  function handleGeoJSON(text: string){
+    // to JSON
+    const json = JSON.parse(text);
+    // validate as GeoJSON (FeatureCollection)
+    const geojson: FeatureCollection = validateGeojson(json);
+    console.log(geojson);
+    
+    return geojson;
+  }
 
   // handle file upload (parse as GeoJSON)
   async function handleFile(file: File){
@@ -18,13 +33,14 @@ export default function Home() {
     try {
       // to string
       const text = await file.text();
-      // to JSON
-      const json = JSON.parse(text);
-      // validate as GeoJSON (FeatureCollection)
-      const geojson: FeatureCollection = validateGeojson(json);
-      console.log(geojson);
+      // convert based on format
+      let g;
+      if(fileFormat === 'geojson'){
+        g = handleGeoJSON(text);
+      }
       // update state
-      setGeojsonData(geojson);
+      if(!g) throw new Error("Unrecognized file format.");
+      setGeojsonData(g);
       setError("");
     } catch(err: unknown){
       console.error(`Error while parsing file "${file.name}":`, err);
@@ -50,6 +66,8 @@ export default function Home() {
           <Sidebar 
             data={geojsonData} 
             filename={filename}
+            fileFormat={fileFormat}
+            setFileFormat={setFileFormat}
             error={error}
             handleFile={handleFile}
             clearFile={handleReset}
