@@ -14,6 +14,7 @@ export default function Home() {
 
   // handle file upload (parse as GeoJSON)
   async function handleFile(file: File){
+    setFilename(file.name);
     try {
       // to string
       const text = await file.text();
@@ -24,12 +25,10 @@ export default function Home() {
       console.log(geojson);
       // update state
       setGeojsonData(geojson);
-      setFilename(file.name);
       setError("");
     } catch(err: unknown){
       console.error(`Error while parsing file "${file.name}":`, err);
       setGeojsonData(null);
-      setFilename("");
       setError((err instanceof Error) ? `Error: ${err.message}` : `Error while parsing file.`);
     }
   }
@@ -50,6 +49,7 @@ export default function Home() {
         <div className="w-[20%] h-full">
           <Sidebar 
             data={geojsonData} 
+            filename={filename}
             error={error}
             handleFile={handleFile}
             clearFile={handleReset}

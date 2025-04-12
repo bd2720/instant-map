@@ -7,12 +7,13 @@ import { error } from 'console';
 
 interface SidebarProps {
   data: FeatureCollection | null
+  filename: string
   error: string
   handleFile: (file: File) => void
   clearFile: () => void
 }
 
-export default function Sidebar({ data, error, handleFile, clearFile }: SidebarProps){
+export default function Sidebar({ data, filename, error, handleFile, clearFile }: SidebarProps){
   return (
     <div className="bg-slate-400 h-full p-4 overflow-hidden">
       <div className="flex flex-wrap justify-center gap-2">
@@ -24,15 +25,19 @@ export default function Sidebar({ data, error, handleFile, clearFile }: SidebarP
       {error ? (
         <>
           <p className="font-light text-xl text-center py-4">
-            Failed to import data!
+            Failed to import data from "{filename}"
           </p>
           <p className="text-red-600 font-bold text-center">
             {error}
           </p>
         </>
-      ) : data && (
+      ) : data ? (
         <p className="font-light text-xl text-center py-4">
-          Successfully imported data!
+          Successfully imported data from "{filename}"
+        </p>
+      ) : (
+        <p className="font-light text-xl text-center py-4">
+          Nothing imported yet.
         </p>
       )
       
