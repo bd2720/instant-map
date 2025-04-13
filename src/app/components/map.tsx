@@ -7,7 +7,7 @@ import { useRef, useState } from 'react';
 import { usePinImage } from '../hooks/use-pin-image';
 
 interface MapProps {
-  data: FeatureCollection | null
+  data: FeatureCollection<Point> | null
 }
 
 export default function Map({ data }: MapProps){
@@ -109,7 +109,13 @@ export default function Map({ data }: MapProps){
           <Popup longitude={selectedPoint.geometry.coordinates[0]} latitude={selectedPoint.geometry.coordinates[1]} className="text-slate-950"
             onClose={() => setSelectedPoint(undefined)}
             closeOnClick={false}
-            offset={(renderPins) ? 36 : 4}
+            offset={(renderPins) ? {
+              "bottom": [0, -36],
+              "left": [14, -23],
+              "right": [-14, -23],
+              "bottom-left": [0, -36],
+              "bottom-right": [0, -36],
+            } : undefined}
           >
             <h2 className="text-xl font-bold text-slate-500 text-center">
               Properties

@@ -4,11 +4,11 @@ import { useState } from 'react';
 import Header from './components/header';
 import Map from './components/map';
 import Sidebar from './components/sidebar';
-import { FeatureCollection } from 'geojson';
+import { FeatureCollection, Point } from 'geojson';
 import { validateGeojson } from './lib/validate';
 
 export default function Home() {
-  const [geojsonData, setGeojsonData] = useState<FeatureCollection | null>(null);
+  const [geojsonData, setGeojsonData] = useState<FeatureCollection<Point> | null>(null);
   const [filename, setFilename] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [fileFormat, setFileFormat] = useState<"csv" | "geojson">("geojson");
@@ -21,7 +21,7 @@ export default function Home() {
     // to JSON
     const json = JSON.parse(text);
     // validate as GeoJSON (FeatureCollection)
-    const geojson: FeatureCollection = validateGeojson(json);
+    const geojson = validateGeojson(json);
     console.log(geojson);
     
     return geojson;
@@ -64,7 +64,7 @@ export default function Home() {
         </div>
         <div className="w-[20%] h-full">
           <Sidebar 
-            data={geojsonData} 
+            hasData={!!geojsonData} 
             filename={filename}
             fileFormat={fileFormat}
             setFileFormat={setFileFormat}

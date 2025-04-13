@@ -2,11 +2,10 @@
 
 import FileInput from './file-input';
 import Button from './button';
-import { FeatureCollection } from 'geojson';
 import Radio from './radio';
 
 interface SidebarProps {
-  data: FeatureCollection | null
+  hasData: boolean
   filename: string
   fileFormat: "csv" | "geojson"
   setFileFormat: (f: "csv" | "geojson") => void
@@ -15,7 +14,7 @@ interface SidebarProps {
   clearFile: () => void
 }
 
-export default function Sidebar({ data, filename, fileFormat, setFileFormat, error, handleFile, clearFile }: SidebarProps){
+export default function Sidebar({ hasData, filename, fileFormat, setFileFormat, error, handleFile, clearFile }: SidebarProps){
   return (
     <div className="bg-slate-400 h-full p-4 overflow-hidden">
       <fieldset className="flex flex-col items-center pb-2">
@@ -48,7 +47,7 @@ export default function Sidebar({ data, filename, fileFormat, setFileFormat, err
             {error}
           </p>
         </>
-      ) : data ? (
+      ) : hasData ? (
         <p className="font-light text-xl text-center py-4">
           Successfully imported data from "{filename}"
         </p>
