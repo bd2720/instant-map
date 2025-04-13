@@ -1,8 +1,8 @@
 "use client";
 
-import ReactMapGL, { Source, Layer, MapRef, MapMouseEvent } from 'react-map-gl/mapbox';
+import ReactMapGL, { type MapRef, type MapMouseEvent, Source, Layer, Popup } from 'react-map-gl/mapbox';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import { FeatureCollection } from 'geojson';
+import { Feature, FeatureCollection, Point } from 'geojson';
 import { useRef, useState } from 'react';
 import { usePinImage } from '../hooks/use-pin-image';
 
@@ -14,13 +14,14 @@ export default function Map({ data }: MapProps){
   const mapRef = useRef<MapRef>(null);
   const [mapLoaded, setMapLoaded] = useState(false);
   const [hoveredPointId, setHoveredPointId] = useState<string | number | undefined>();
-  const [selectedPointId, setSelectedPointId] = useState<string | number | undefined>();
-
+  const [selectedPoint, setSelectedPoint] = useState<Feature<Point>>();
+  
   // load pin image in custom hook
   const imageLoaded = usePinImage(mapRef, mapLoaded);
 
   // determine number of features (use point layer if too many)
   const numFeatures = data?.features.length ?? 0;
+  const renderPins = numFeatures < 100;
 
   // called when the mouse is moving over the map
   function handleMouseMove(e: MapMouseEvent){
@@ -31,9 +32,10 @@ export default function Map({ data }: MapProps){
 
   // called when the mouse clicks on the map
   function handleMouseDown(e: MapMouseEvent){
-    if(!e.features?.length) return;
+    if(!e.features?.length || e.features[0].geometry.type !== 'Point') return;
     // update selected point
-    setSelectedPointId((e.features[0].id !== selectedPointId) ? e.features[0].id : undefined);
+    const clickedPoint = e.features[0] as Feature<Point>;
+    setSelectedPoint((clickedPoint.id !== selectedPoint?.id) ? clickedPoint : undefined);
   }
 
   return (
@@ -56,7 +58,7 @@ export default function Map({ data }: MapProps){
         {data && imageLoaded && (
           <Source type="geojson" data={data} generateId>
             {
-              (numFeatures < 100) ? (
+              (renderPins) ? (
                 <Layer type="symbol" id="data-pin"
                   layout={{
                     "icon-allow-overlap": true,
@@ -66,7 +68,7 @@ export default function Map({ data }: MapProps){
                     "symbol-sort-key": [
                       "case",
                       ["==", ["id"], hoveredPointId ?? null], 2,
-                      ["==", ["id"], selectedPointId ?? null], 1,
+                      ["==", ["id"], selectedPoint?.id ?? null], 1,
                       0
                     ]
                   }}
@@ -74,7 +76,7 @@ export default function Map({ data }: MapProps){
                     "icon-color": [
                       "case",
                       ["==", ["id"], hoveredPointId ?? null], "#64748b",
-                      ["==", ["id"], selectedPointId ?? null], "#64748b",
+                      ["==", ["id"], selectedPoint?.id ?? null], "#64748b",
                       "#020617"
                     ]
                   }}
@@ -85,7 +87,7 @@ export default function Map({ data }: MapProps){
                     "circle-sort-key": [
                       "case",
                       ["==", ["id"], hoveredPointId ?? null], 2,
-                      ["==", ["id"], selectedPointId ?? null], 1,
+                      ["==", ["id"], selectedPoint?.id ?? null], 1,
                       0
                     ]
                   }}
@@ -94,7 +96,7 @@ export default function Map({ data }: MapProps){
                     "circle-color": [
                       "case",
                       ["==", ["id"], hoveredPointId ?? null], "#64748b",
-                      ["==", ["id"], selectedPointId ?? null], "#64748b",
+                      ["==", ["id"], selectedPoint?.id ?? null], "#64748b",
                       "#020617"
                     ]                    
                   }}
@@ -102,6 +104,29 @@ export default function Map({ data }: MapProps){
               )
             }  
           </Source>
+        )}
+        {selectedPoint && (
+          <Popup longitude={selectedPoint.geometry.coordinates[0]} latitude={selectedPoint.geometry.coordinates[1]} className="text-slate-950"
+            onClose={() => setSelectedPoint(undefined)}
+            closeOnClick={false}
+            offset={(renderPins) ? 36 : 4}
+          >
+            <h2 className="text-xl font-bold text-slate-500 text-center">
+              Properties
+            </h2>
+            <ul>
+              {Object.entries(selectedPoint.properties ?? {}).map(([name, property]) => (
+                <li key={name}>
+                  <span className="text-slate-700 font-bold">
+                    {name}:{' '}
+                  </span>
+                  <span className="text-slate-500">
+                    {property}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </Popup>
         )}
       </ReactMapGL>
   );
