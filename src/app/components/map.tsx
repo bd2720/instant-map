@@ -21,7 +21,7 @@ export default function Map({ data }: MapProps){
 
   // determine number of features (use point layer if too many)
   const numFeatures = data?.features.length ?? 0;
-  const renderPins = numFeatures < 100;
+  const renderPins = numFeatures < 1000;
 
   // called when the mouse is moving over the map
   function handleMouseMove(e: MapMouseEvent){
@@ -56,7 +56,7 @@ export default function Map({ data }: MapProps){
         onMouseDown={handleMouseDown}
       >
         {data && imageLoaded && (
-          <Source type="geojson" data={data} generateId>
+          <Source type="geojson" data={data} generateId key={renderPins ? "symbol-source" : "circle-source"}>
             {
               (renderPins) ? (
                 <Layer type="symbol" id="data-pin"
@@ -115,9 +115,9 @@ export default function Map({ data }: MapProps){
               "right": [-14, -23],
               "bottom-left": [0, -36],
               "bottom-right": [0, -36],
-            } : undefined}
+            } : 4}
           >
-            <h2 className="text-xl font-bold text-slate-500 text-center">
+            <h2 className="text-xl font-bold text-slate-700 text-center">
               Properties
             </h2>
             <ul>

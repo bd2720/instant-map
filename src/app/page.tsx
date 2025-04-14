@@ -6,15 +6,16 @@ import Map from './components/map';
 import Sidebar from './components/sidebar';
 import { FeatureCollection, Point } from 'geojson';
 import { validateGeojson } from './lib/validate';
+import Papa from 'papaparse';
 
 export default function Home() {
   const [geojsonData, setGeojsonData] = useState<FeatureCollection<Point> | null>(null);
   const [filename, setFilename] = useState<string>("");
-  const [error, setError] = useState<string>("");
   const [fileFormat, setFileFormat] = useState<"csv" | "geojson">("geojson");
+  const [error, setError] = useState<string>("");
 
   function handleCSV(text: string){
-    // TODO
+    
   }
 
   function handleGeoJSON(text: string){
