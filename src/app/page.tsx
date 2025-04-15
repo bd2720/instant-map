@@ -6,42 +6,53 @@ import Map from './components/map';
 import Sidebar from './components/sidebar';
 import { FeatureCollection, Point } from 'geojson';
 import { validateGeojson } from './lib/validate';
-import Papa from 'papaparse';
+
+export type FileFormat = "csv" | "json" | "geojson";
+
+async function convertCSV(file: File){
+  // TODO
+}
+
+async function convertJSON(file: File){
+  // to string
+  const text = await file.text();
+  // to JSON
+  const json = JSON.parse(text);
+  //
+}
+
+async function convertGeoJSON(file: File){
+  // to string
+  const text = await file.text();
+  // to JSON
+  const json = JSON.parse(text);
+  // validate as GeoJSON (FeatureCollection)
+  const geojson = validateGeojson(json);
+  return geojson;
+}
+
+const converterMap = {
+  'csv': convertCSV, 
+  'json': convertJSON, 
+  'geojson': convertGeoJSON
+}
 
 export default function Home() {
   const [geojsonData, setGeojsonData] = useState<FeatureCollection<Point> | null>(null);
   const [filename, setFilename] = useState<string>("");
-  const [fileFormat, setFileFormat] = useState<"csv" | "geojson">("geojson");
+  const [fileFormat, setFileFormat] = useState<FileFormat>("geojson");
   const [error, setError] = useState<string>("");
-
-  function handleCSV(text: string){
-    
-  }
-
-  function handleGeoJSON(text: string){
-    // to JSON
-    const json = JSON.parse(text);
-    // validate as GeoJSON (FeatureCollection)
-    const geojson = validateGeojson(json);
-    console.log(geojson);
-    
-    return geojson;
-  }
 
   // handle file upload (parse as GeoJSON)
   async function handleFile(file: File){
     setFilename(file.name);
     try {
-      // to string
-      const text = await file.text();
       // convert based on format
-      let g;
-      if(fileFormat === 'geojson'){
-        g = handleGeoJSON(text);
-      }
+      //const data = await converterMap[fileFormat](file);
+      const data = await convertGeoJSON(file);
       // update state
-      if(!g) throw new Error("Unrecognized file format.");
-      setGeojsonData(g);
+      if(!data) throw new Error("Unrecognized file format.");
+      setGeojsonData(data);
       setError("");
     } catch(err: unknown){
       console.error(`Error while parsing file "${file.name}":`, err);

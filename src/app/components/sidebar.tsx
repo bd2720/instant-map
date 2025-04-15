@@ -3,11 +3,12 @@
 import FileInput from './file-input';
 import Button from './button';
 import Radio from './radio';
+import { type FileFormat } from '../page';
 
 interface SidebarProps {
   hasData: boolean
   filename: string
-  fileFormat: "csv" | "geojson"
+  fileFormat: FileFormat
   setFileFormat: (f: "csv" | "geojson") => void
   error: string
   handleFile: (file: File) => void

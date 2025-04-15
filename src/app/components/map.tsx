@@ -1,6 +1,6 @@
 "use client";
 
-import ReactMapGL, { type MapRef, type MapMouseEvent, Source, Layer, Popup } from 'react-map-gl/mapbox';
+import ReactMapGL, { type MapRef, type MapMouseEvent, Source, Layer, Popup, NavigationControl } from 'react-map-gl/mapbox';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { Feature, FeatureCollection, Point } from 'geojson';
 import { useRef, useState } from 'react';
@@ -32,7 +32,7 @@ export default function Map({ data }: MapProps){
 
   // called when the mouse clicks on the map
   function handleMouseDown(e: MapMouseEvent){
-    if(!e.features?.length || e.features[0].geometry.type !== 'Point') return;
+    if(!e.features?.length) return;
     // update selected point
     const clickedPoint = e.features[0] as Feature<Point>;
     setSelectedPoint((clickedPoint.id !== selectedPoint?.id) ? clickedPoint : undefined);
@@ -50,7 +50,7 @@ export default function Map({ data }: MapProps){
           zoom: 10,
         }}
         interactiveLayerIds={["data-pin", "data-point"]}
-        cursor={(hoveredPointId !== undefined) ? 'pointer' : 'auto'}
+        cursor={(hoveredPointId !== undefined) ? 'pointer' : undefined}
         onLoad={() => setMapLoaded(true)}
         onMouseMove={handleMouseMove}
         onMouseDown={handleMouseDown}
@@ -106,7 +106,7 @@ export default function Map({ data }: MapProps){
           </Source>
         )}
         {selectedPoint && (
-          <Popup longitude={selectedPoint.geometry.coordinates[0]} latitude={selectedPoint.geometry.coordinates[1]} className="text-slate-950"
+          <Popup longitude={selectedPoint.geometry.coordinates[0]} latitude={selectedPoint.geometry.coordinates[1]} className="text-xl text-slate-950"
             onClose={() => setSelectedPoint(undefined)}
             closeOnClick={false}
             offset={(renderPins) ? {
@@ -117,12 +117,12 @@ export default function Map({ data }: MapProps){
               "bottom-right": [0, -36],
             } : 4}
           >
-            <h2 className="text-xl font-bold text-slate-700 text-center">
+            <h2 className="font-bold text-slate-700 text-center">
               Properties
             </h2>
             <ul>
               {Object.entries(selectedPoint.properties ?? {}).map(([name, property]) => (
-                <li key={name}>
+                <li key={name} className="text-sm">
                   <span className="text-slate-700 font-bold">
                     {name}:{' '}
                   </span>
@@ -134,6 +134,7 @@ export default function Map({ data }: MapProps){
             </ul>
           </Popup>
         )}
+        <NavigationControl />
       </ReactMapGL>
   );
 }
