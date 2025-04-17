@@ -20,7 +20,7 @@ export default function Sidebar({ hasData, filename, fileFormat, setFileFormat, 
     <div className="bg-slate-400 h-full p-4 overflow-hidden">
       <FileFormats fileFormat={fileFormat} setFileFormat={setFileFormat} />
       <div className="flex flex-wrap justify-center gap-2">
-        <FileInput handleFile={handleFile} />
+        <FileInput fileFormat={fileFormat} handleFile={handleFile} />
         <Button onClick={clearFile}>
           Reset
         </Button>

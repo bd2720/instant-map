@@ -2,12 +2,14 @@
 
 import { useRef, type ChangeEvent } from 'react';
 import Button from './button';
+import { type FileFormat } from '../page';
 
 interface FileInputProps {
+  fileFormat: FileFormat
   handleFile: (file: File) => void
 }
 
-export default function FileInput({ handleFile }: FileInputProps){
+export default function FileInput({ fileFormat, handleFile }: FileInputProps){
   const hiddenFileInput = useRef<HTMLInputElement>(null);
 
   // indirectly click the hidden file input button
@@ -29,7 +31,9 @@ export default function FileInput({ handleFile }: FileInputProps){
       <Button onClick={handleClick}>
         Import
       </Button>
-      <input 
+      <input
+        key={fileFormat}
+        accept={`.${fileFormat}`}
         type="file" 
         ref={hiddenFileInput} 
         className="hidden"

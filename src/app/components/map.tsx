@@ -105,7 +105,7 @@ export default function Map({ data }: MapProps){
             }  
           </Source>
         )}
-        {selectedPoint && (
+        {data && selectedPoint && (
           <Popup longitude={selectedPoint.geometry.coordinates[0]} latitude={selectedPoint.geometry.coordinates[1]} className="text-xl text-slate-950"
             onClose={() => setSelectedPoint(undefined)}
             closeOnClick={false}
