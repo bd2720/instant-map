@@ -17,7 +17,7 @@ export default function FileInput({ handleFile }: FileInputProps){
 
   // upload file
   function handleChange(e: ChangeEvent<HTMLInputElement>){
-    if(e.target.files){
+    if(e.target.files?.length){
       const file = e.target.files[0];
       console.log('Imported:', file);
       handleFile(file);

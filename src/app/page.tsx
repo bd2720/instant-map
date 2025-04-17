@@ -5,23 +5,28 @@ import Header from './components/header';
 import Map from './components/map';
 import Sidebar from './components/sidebar';
 import { FeatureCollection, Point } from 'geojson';
-import { validateGeojson } from './lib/validate';
+import { validateJson, validateGeojson } from './lib/validate';
+import { convertJson } from './lib/convert';
 
 export type FileFormat = "csv" | "json" | "geojson";
 
-async function convertCSV(file: File){
+async function toCSV(file: File){
   // TODO
 }
 
-async function convertJSON(file: File){
+async function toJSON(file: File){
   // to string
   const text = await file.text();
   // to JSON
   const json = JSON.parse(text);
-  //
+  // validate
+  const validatedJson = validateJson(json);
+  // convert to geojson
+  const geojson = convertJson(validatedJson);
+  return geojson;
 }
 
-async function convertGeoJSON(file: File){
+async function toGeoJSON(file: File){
   // to string
   const text = await file.text();
   // to JSON
@@ -32,9 +37,9 @@ async function convertGeoJSON(file: File){
 }
 
 const converterMap = {
-  'csv': convertCSV, 
-  'json': convertJSON, 
-  'geojson': convertGeoJSON
+  'csv': toCSV, 
+  'json': toJSON, 
+  'geojson': toGeoJSON
 }
 
 export default function Home() {
@@ -45,11 +50,12 @@ export default function Home() {
 
   // handle file upload (parse as GeoJSON)
   async function handleFile(file: File){
+    if(!file) throw new Error("File is undefined.");
     setFilename(file.name);
     try {
       // convert based on format
-      //const data = await converterMap[fileFormat](file);
-      const data = await convertGeoJSON(file);
+      const data = await converterMap[fileFormat](file);
+      //const data = await toGeoJSON(file);
       // update state
       if(!data) throw new Error("Unrecognized file format.");
       setGeojsonData(data);
