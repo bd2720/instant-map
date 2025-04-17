@@ -8,7 +8,7 @@ import { FeatureCollection, Point } from 'geojson';
 import { validateJson, validateGeojson } from './lib/validate';
 import { convertJson } from './lib/convert';
 
-export type FileFormat = "csv" | "json" | "geojson";
+export type FileFormat = "csv" | "json" | "geojson" | "sample";
 
 async function toCSV(file: File){
   // TODO
@@ -39,7 +39,8 @@ async function toGeoJSON(file: File){
 const converterMap = {
   'csv': toCSV, 
   'json': toJSON, 
-  'geojson': toGeoJSON
+  'geojson': toGeoJSON,
+  'sample': toGeoJSON
 }
 
 export default function Home() {

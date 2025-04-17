@@ -4,7 +4,7 @@ import ReactMapGL, { type MapRef, type MapMouseEvent, Source, Layer, Popup, Navi
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { Feature, FeatureCollection, Point } from 'geojson';
 import { useRef, useState } from 'react';
-import { usePinImage } from '../hooks/use-pin-image';
+import { usePinImage } from '../hooks/usePinImage';
 
 interface MapProps {
   data: FeatureCollection<Point> | null
@@ -106,7 +106,8 @@ export default function Map({ data }: MapProps){
           </Source>
         )}
         {data && selectedPoint && (
-          <Popup longitude={selectedPoint.geometry.coordinates[0]} latitude={selectedPoint.geometry.coordinates[1]} className="text-xl text-slate-950"
+          <Popup longitude={selectedPoint.geometry.coordinates[0]} latitude={selectedPoint.geometry.coordinates[1]}
+            className="text-xl text-slate-950"
             onClose={() => setSelectedPoint(undefined)}
             closeOnClick={false}
             offset={(renderPins) ? {

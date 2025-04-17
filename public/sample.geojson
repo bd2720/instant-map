@@ -1,0 +1,708 @@
+{
+  "name": "Sample Data - Restaurants",
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -74.27404344190806,
+          41.577380084287704
+        ]
+      },
+      "properties": {
+        "id": 1,
+        "name": "Basil Mirage",
+        "owner": "Marcus Dupree",
+        "type": "Mediterranean",
+        "rating": 3.0,
+        "reviews": 84
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -72.36256716309038,
+          41.574625165127316
+        ]
+      },
+      "properties": {
+        "id": 2,
+        "name": "Spicy Spoon",
+        "owner": "Clara Beaumont",
+        "type": "Indian Fusion",
+        "rating": 1.8,
+        "reviews": 98
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.41325920145115,
+          41.516528308114495
+        ]
+      },
+      "properties": {
+        "id": 3,
+        "name": "Crumb & Co.",
+        "owner": "Elena Moretti",
+        "type": "Bakery & Café",
+        "rating": 4.3,
+        "reviews": 97
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -74.04677811947167,
+          40.95228101188916
+        ]
+      },
+      "properties": {
+        "id": 4,
+        "name": "Golden Thyme",
+        "owner": "Diego Alvarez",
+        "type": "Farm-to-Table",
+        "rating": 2.9,
+        "reviews": 53
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -72.66895827705686,
+          41.49337055563672
+        ]
+      },
+      "properties": {
+        "id": 6,
+        "name": "Spicy Spoon",
+        "owner": "Clara Beaumont",
+        "type": "Indian Fusion",
+        "rating": 3.6,
+        "reviews": 67
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.48028902499998,
+          40.7792078699515
+        ]
+      },
+      "properties": {
+        "id": 7,
+        "name": "Wanderlust Bistro",
+        "owner": "Gavin Brooks",
+        "type": "Global Street Food",
+        "rating": 3.9,
+        "reviews": 52
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -74.08941191551695,
+          41.27586727869227
+        ]
+      },
+      "properties": {
+        "id": 8,
+        "name": "Wanderlust Bistro",
+        "owner": "Gavin Brooks",
+        "type": "Global Street Food",
+        "rating": 2.8,
+        "reviews": 15
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -72.84427319953026,
+          41.26679229222001
+        ]
+      },
+      "properties": {
+        "id": 9,
+        "name": "Basil Mirage",
+        "owner": "Marcus Dupree",
+        "type": "Mediterranean",
+        "rating": 1.0,
+        "reviews": 75
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.39638303273772,
+          40.9496969841469
+        ]
+      },
+      "properties": {
+        "id": 10,
+        "name": "Ember & Ash",
+        "owner": "Priya Shah",
+        "type": "Wood-Fired Grill",
+        "rating": 2.9,
+        "reviews": 93
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.80842050776074,
+          40.70059015387656
+        ]
+      },
+      "properties": {
+        "id": 12,
+        "name": "Ember & Ash",
+        "owner": "Priya Shah",
+        "type": "Wood-Fired Grill",
+        "rating": 4.0,
+        "reviews": 37
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -74.07493969938271,
+          40.82937912642955
+        ]
+      },
+      "properties": {
+        "id": 15,
+        "name": "The Laughing Radish",
+        "owner": "Liam O’Donnell",
+        "type": "Vegan",
+        "rating": 2.7,
+        "reviews": 42
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.4180802946647,
+          41.319982546697176
+        ]
+      },
+      "properties": {
+        "id": 16,
+        "name": "Basil Mirage",
+        "owner": "Marcus Dupree",
+        "type": "Mediterranean",
+        "rating": 3.3,
+        "reviews": 66
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.23641810817213,
+          40.83477128770521
+        ]
+      },
+      "properties": {
+        "id": 17,
+        "name": "Spicy Spoon",
+        "owner": "Clara Beaumont",
+        "type": "Indian Fusion",
+        "rating": 1.7,
+        "reviews": 11
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -74.08195035819097,
+          40.71179518446716
+        ]
+      },
+      "properties": {
+        "id": 18,
+        "name": "Ember & Ash",
+        "owner": "Priya Shah",
+        "type": "Wood-Fired Grill",
+        "rating": 1.4,
+        "reviews": 95
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -72.44880580557053,
+          40.911035131127235
+        ]
+      },
+      "properties": {
+        "id": 19,
+        "name": "Spicy Spoon",
+        "owner": "Clara Beaumont",
+        "type": "Indian Fusion",
+        "rating": 4.2,
+        "reviews": 16
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -71.91527833185154,
+          41.379048929526874
+        ]
+      },
+      "properties": {
+        "id": 20,
+        "name": "Citrus & Smoke",
+        "owner": "Mina Takahashi",
+        "type": "Asian BBQ",
+        "rating": 1.5,
+        "reviews": 82
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -74.29128131071649,
+          41.36708718942645
+        ]
+      },
+      "properties": {
+        "id": 21,
+        "name": "Midnight Skillet",
+        "owner": "Tanya Hargrove",
+        "type": "Southern Comfort Food",
+        "rating": 3.0,
+        "reviews": 77
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.8734708985616,
+          41.36389956217459
+        ]
+      },
+      "properties": {
+        "id": 22,
+        "name": "The Laughing Radish",
+        "owner": "Liam O’Donnell",
+        "type": "Vegan",
+        "rating": 4.5,
+        "reviews": 49
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -72.42202000150289,
+          40.8734842786008
+        ]
+      },
+      "properties": {
+        "id": 23,
+        "name": "Basil Mirage",
+        "owner": "Marcus Dupree",
+        "type": "Mediterranean",
+        "rating": 1.9,
+        "reviews": 96
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.39700517139694,
+          41.11280342710622
+        ]
+      },
+      "properties": {
+        "id": 24,
+        "name": "Citrus & Smoke",
+        "owner": "Mina Takahashi",
+        "type": "Asian BBQ",
+        "rating": 1.0,
+        "reviews": 27
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -72.27222699862635,
+          40.96487743601962
+        ]
+      },
+      "properties": {
+        "id": 25,
+        "name": "The Laughing Radish",
+        "owner": "Liam O’Donnell",
+        "type": "Vegan",
+        "rating": 1.6,
+        "reviews": 80
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -74.14067633293624,
+          40.59718059317421
+        ]
+      },
+      "properties": {
+        "id": 28,
+        "name": "Ember & Ash",
+        "owner": "Priya Shah",
+        "type": "Wood-Fired Grill",
+        "rating": 3.8,
+        "reviews": 20
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -72.69853153101897,
+          41.37562412107042
+        ]
+      },
+      "properties": {
+        "id": 29,
+        "name": "The Velvet Fork",
+        "owner": "Jasper Lin",
+        "type": "Modern European",
+        "rating": 1.2,
+        "reviews": 20
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -72.88157029382695,
+          40.80735657235895
+        ]
+      },
+      "properties": {
+        "id": 30,
+        "name": "Ember & Ash",
+        "owner": "Priya Shah",
+        "type": "Wood-Fired Grill",
+        "rating": 0.5,
+        "reviews": 11
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.70813811405024,
+          41.2773579948195
+        ]
+      },
+      "properties": {
+        "id": 34,
+        "name": "The Laughing Radish",
+        "owner": "Liam O’Donnell",
+        "type": "Vegan",
+        "rating": 0.2,
+        "reviews": 7
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.2084484446967,
+          41.319744469934506
+        ]
+      },
+      "properties": {
+        "id": 35,
+        "name": "Golden Thyme",
+        "owner": "Diego Alvarez",
+        "type": "Farm-to-Table",
+        "rating": 1.1,
+        "reviews": 97
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.97561951038732,
+          41.28683774901037
+        ]
+      },
+      "properties": {
+        "id": 36,
+        "name": "Crumb & Co.",
+        "owner": "Elena Moretti",
+        "type": "Bakery & Café",
+        "rating": 0.1,
+        "reviews": 57
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5768827081126,
+          41.51392527817899
+        ]
+      },
+      "properties": {
+        "id": 37,
+        "name": "Midnight Skillet",
+        "owner": "Tanya Hargrove",
+        "type": "Southern Comfort Food",
+        "rating": 0.1,
+        "reviews": 13
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.84940548336112,
+          41.295478266169624
+        ]
+      },
+      "properties": {
+        "id": 38,
+        "name": "Spicy Spoon",
+        "owner": "Clara Beaumont",
+        "type": "Indian Fusion",
+        "rating": 0.3,
+        "reviews": 8
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.93663953917459,
+          40.99054654257297
+        ]
+      },
+      "properties": {
+        "id": 39,
+        "name": "Golden Thyme",
+        "owner": "Diego Alvarez",
+        "type": "Farm-to-Table",
+        "rating": 4.2,
+        "reviews": 85
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -72.83728187020887,
+          40.81405722907317
+        ]
+      },
+      "properties": {
+        "id": 40,
+        "name": "Golden Thyme",
+        "owner": "Diego Alvarez",
+        "type": "Farm-to-Table",
+        "rating": 1.2,
+        "reviews": 62
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.05456544018638,
+          41.34490778493585
+        ]
+      },
+      "properties": {
+        "id": 41,
+        "name": "Citrus & Smoke",
+        "owner": "Mina Takahashi",
+        "type": "Asian BBQ",
+        "rating": 4.9,
+        "reviews": 4
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.42489644548044,
+          40.66373801731203
+        ]
+      },
+      "properties": {
+        "id": 42,
+        "name": "The Velvet Fork",
+        "owner": "Jasper Lin",
+        "type": "Modern European",
+        "rating": 2.8,
+        "reviews": 83
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.29310970087604,
+          40.62502077372522
+        ]
+      },
+      "properties": {
+        "id": 44,
+        "name": "The Laughing Radish",
+        "owner": "Liam O’Donnell",
+        "type": "Vegan",
+        "rating": 2.3,
+        "reviews": 31
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.41682285446016,
+          41.344507830535825
+        ]
+      },
+      "properties": {
+        "id": 46,
+        "name": "Golden Thyme",
+        "owner": "Diego Alvarez",
+        "type": "Farm-to-Table",
+        "rating": 4.3,
+        "reviews": 54
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -74.26822746471406,
+          40.73408105986316
+        ]
+      },
+      "properties": {
+        "id": 47,
+        "name": "Crumb & Co.",
+        "owner": "Elena Moretti",
+        "type": "Bakery & Café",
+        "rating": 4.4,
+        "reviews": 39
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.51465752346589,
+          41.19854037566007
+        ]
+      },
+      "properties": {
+        "id": 48,
+        "name": "Citrus & Smoke",
+        "owner": "Mina Takahashi",
+        "type": "Asian BBQ",
+        "rating": 2.1,
+        "reviews": 93
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -72.8180281435627,
+          40.92463481741719
+        ]
+      },
+      "properties": {
+        "id": 49,
+        "name": "Basil Mirage",
+        "owner": "Marcus Dupree",
+        "type": "Mediterranean",
+        "rating": 3.6,
+        "reviews": 60
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -74.01879153695079,
+          40.77260389301784
+        ]
+      },
+      "properties": {
+        "id": 50,
+        "name": "Citrus & Smoke",
+        "owner": "Mina Takahashi",
+        "type": "Asian BBQ",
+        "rating": 1.6,
+        "reviews": 85
+      }
+    }
+  ]
+}
