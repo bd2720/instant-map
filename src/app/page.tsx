@@ -7,14 +7,15 @@ import Sidebar from './components/sidebar';
 import { FeatureCollection, Point } from 'geojson';
 import { validateJson, validateGeojson } from './lib/validate';
 import { convertJson } from './lib/convert';
+import { ZodError } from 'zod';
 
 export type FileFormat = "csv" | "json" | "geojson" | "sample";
 
-async function toCSV(file: File){
+async function fromCSV(file: File){
   // TODO
 }
 
-async function toJSON(file: File){
+async function fromJSON(file: File){
   // to string
   const text = await file.text();
   // to JSON
@@ -26,7 +27,7 @@ async function toJSON(file: File){
   return geojson;
 }
 
-async function toGeoJSON(file: File){
+async function fromGeoJSON(file: File){
   // to string
   const text = await file.text();
   // to JSON
@@ -37,10 +38,10 @@ async function toGeoJSON(file: File){
 }
 
 const converterMap = {
-  'csv': toCSV, 
-  'json': toJSON, 
-  'geojson': toGeoJSON,
-  'sample': toGeoJSON
+  'csv': fromCSV, 
+  'json': fromJSON, 
+  'geojson': fromGeoJSON,
+  'sample': fromGeoJSON
 }
 
 export default function Home() {
@@ -56,7 +57,6 @@ export default function Home() {
     try {
       // convert based on format
       const data = await converterMap[fileFormat](file);
-      //const data = await toGeoJSON(file);
       // update state
       if(!data) throw new Error("Unrecognized file format.");
       setGeojsonData(data);
@@ -64,7 +64,22 @@ export default function Home() {
     } catch(err: unknown){
       console.error(`Error while parsing file "${file.name}":`, err);
       setGeojsonData(null);
-      setError((err instanceof Error) ? `Error: ${err.message}` : `Error while parsing file.`);
+      // construct error string
+      if(err instanceof Error){
+        if(err instanceof ZodError){
+          const issue = err.issues[0];
+          const pathStr = issue.path.length ? `"${issue.path.join('.')}"` : '(Object root)';
+          if(issue){
+            setError(`Error: ${issue.message} at ${pathStr}`);
+          } else {
+            setError(`Error while parsing file "${file.name}"`);
+          }
+        } else {
+          setError(`Error: ${err.message}`);
+        }
+      } else {
+        setError(`Error while parsing file "${file.name}"`);
+      }
     }
   }
 
