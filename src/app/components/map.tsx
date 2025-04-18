@@ -3,7 +3,7 @@
 import ReactMapGL, { type MapRef, type MapMouseEvent, Source, Layer, Popup, NavigationControl } from 'react-map-gl/mapbox';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { Feature, FeatureCollection, Point } from 'geojson';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { usePinImage } from '../hooks/usePinImage';
 
 interface MapProps {
@@ -22,6 +22,12 @@ export default function Map({ data }: MapProps){
   // determine number of features (use point layer if too many)
   const numFeatures = data?.features.length ?? 0;
   const renderPins = numFeatures < 1000;
+
+  // reset hovered/selected points when new map data load
+  useEffect(() => {
+    setHoveredPointId(undefined);
+    setSelectedPoint(undefined);
+  }, [data]);
 
   // called when the mouse is moving over the map
   function handleMouseMove(e: MapMouseEvent){

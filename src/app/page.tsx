@@ -84,6 +84,7 @@ export default function Home() {
         <div className="w-[20%] h-full">
           <Sidebar 
             hasData={!!geojsonData} 
+            numFeatures={geojsonData?.features.length} 
             filename={filename}
             fileFormat={fileFormat}
             setFileFormat={setFileFormat}

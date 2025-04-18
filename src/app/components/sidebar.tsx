@@ -7,6 +7,7 @@ import FileInfo from './file-info';
 
 interface SidebarProps {
   hasData: boolean
+  numFeatures: number | undefined
   filename: string
   fileFormat: FileFormat
   setFileFormat: (f: FileFormat) => void
@@ -15,12 +16,12 @@ interface SidebarProps {
   clearFile: () => void
 }
 
-export default function Sidebar({ hasData, filename, fileFormat, setFileFormat, error, handleFile, clearFile }: SidebarProps){
+export default function Sidebar({ hasData, numFeatures, filename, fileFormat, setFileFormat, error, handleFile, clearFile }: SidebarProps){
   return (
     <div className="bg-slate-400 h-full p-4 overflow-hidden">
       <FileFormats fileFormat={fileFormat} setFileFormat={setFileFormat} />
       <FileInput fileFormat={fileFormat} handleFile={handleFile} clearFile={clearFile} />
-      <FileInfo hasData={hasData} filename={filename} error={error} />
+      <FileInfo hasData={hasData} numFeatures={numFeatures} filename={filename} error={error} />
     </div>
   );
 }
