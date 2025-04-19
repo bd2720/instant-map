@@ -6,8 +6,6 @@ export function useSampleData(fileInputRef: RefObject<HTMLInputElement | null>, 
 
   // handle sample file upload (upload to file input)
   return () => {
-    console.log('Handle Sample, isLoadingSample =', abortControllerRef.current !== null);
-    
     if(abortControllerRef.current){
       abortControllerRef.current.abort("Request overridden");
     }

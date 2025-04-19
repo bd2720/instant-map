@@ -8,11 +8,32 @@ import { FeatureCollection, Point } from 'geojson';
 import { validateJson, validateGeojson } from './lib/validate';
 import { convertJson } from './lib/convert';
 import { ZodError } from 'zod';
+import { parse, ParseResult } from 'papaparse';
 
 export type FileFormat = "csv" | "json" | "geojson" | "sample";
 
 async function fromCSV(file: File){
-  // TODO
+  const parserPromise: Promise<ParseResult<Object>> = new Promise((resolve, reject) => {
+    // Papa parse
+    parse<Object>(file, { 
+      delimiter: ",",
+      header: true,
+      complete: (results, _) => {
+        resolve(results);
+      },
+      error: (errors, _) => {
+        reject(errors);
+      }
+    });
+  });
+
+  // to JSON (Papa parse)
+  const { data } = await parserPromise;
+  // validate json
+  const validatedJson = validateJson(data);
+  // convert to geojson
+  const geojson = convertJson(validatedJson);
+  return geojson;
 }
 
 async function fromJSON(file: File){
