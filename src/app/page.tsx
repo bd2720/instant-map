@@ -70,6 +70,7 @@ export default function Home() {
   const [filename, setFilename] = useState<string>("");
   const [fileFormat, setFileFormat] = useState<FileFormat>("geojson");
   const [error, setError] = useState<string>("");
+  const [useAddress, setUseAddress] = useState(false);
 
   // handle file upload (parse as GeoJSON)
   async function handleFile(file: File){
@@ -124,6 +125,8 @@ export default function Home() {
             filename={filename}
             fileFormat={fileFormat}
             setFileFormat={setFileFormat}
+            useAddress={useAddress}
+            setUseAddress={setUseAddress}
             error={error}
             handleFile={handleFile}
             clearFile={handleReset}

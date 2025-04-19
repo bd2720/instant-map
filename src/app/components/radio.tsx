@@ -5,15 +5,17 @@ interface RadioProps extends PropsWithChildren {
   name: string
   value: any
   checked: boolean
+  disabled?: boolean
   onChange: ChangeEventHandler<HTMLInputElement>
 }
 
-export default function Radio({ children, id, name, value, checked = false, onChange }: RadioProps){
+export default function Radio({ children, id, name, value, checked = false, disabled = false, onChange }: RadioProps){
   return (
     <div>
       <input type="radio" id={id} name={name} value={value}
         className="mx-2 accent-slate-500"
         checked={checked}
+        disabled={disabled}
         onChange={onChange}
       />
       <label htmlFor={id}>
