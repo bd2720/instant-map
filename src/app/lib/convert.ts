@@ -1,7 +1,7 @@
-import { type JSONSchema, type GeoJSONSchema } from "./validate";
+import { type JSONCoords, type GeoJSONSchema } from "./validate";
 
 /** Convert a validated JSON Object (has geospatial fields) to GeoJSON */
-export function convertJson(json: JSONSchema): GeoJSONSchema {
+export function convertJson(json: JSONCoords): GeoJSONSchema {
   // assemble feature array
   const features = json.map(obj => {
     // use rest syntax to get properties

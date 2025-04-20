@@ -24,14 +24,24 @@ export function validateGeojson(data: Object){
 }
 
 // define json file format (need lon/lat)
-const jsonSchema = z.object({
+const jsonCoordSchema = z.object({
   longitude: z.coerce.number().min(-180).max(180),
   latitude: z.coerce.number().min(-90).max(90),
 }).passthrough().array();
 
-export type JSONSchema = z.infer<typeof jsonSchema>;
+const jsonAddrSchema = z.object({
+  address: z.string()
+}).passthrough().array();
 
-/** Validate JSON data (needs geospatial fields) */
-export function validateJson(data: Object){
-  return jsonSchema.parse(data);
+export type JSONCoords = z.infer<typeof jsonCoordSchema>;
+export type JSONAddresses = z.infer<typeof jsonAddrSchema>;
+
+/* Validate JSON data  */
+
+export function validateJsonCoord(data: Object){
+  return jsonCoordSchema.parse(data);
+}
+
+export function validateJsonAddr(data: Object){
+  return jsonAddrSchema.parse(data);
 }

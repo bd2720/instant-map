@@ -5,10 +5,11 @@ import Header from './components/header';
 import Map from './components/map';
 import Sidebar from './components/sidebar';
 import { FeatureCollection, Point } from 'geojson';
-import { validateJson, validateGeojson } from './lib/validate';
+import { validateJsonCoord, validateJsonAddr, validateGeojson } from './lib/validate';
 import { convertJson } from './lib/convert';
 import { ZodError } from 'zod';
 import { parse, ParseResult } from 'papaparse';
+import { geocode } from './lib/geocode';
 
 export type FileFormat = "csv" | "json" | "geojson" | "sample";
 
@@ -30,22 +31,31 @@ async function fromCSV(file: File){
   // to JSON (Papa parse)
   const { data } = await parserPromise;
   // validate json
-  const validatedJson = validateJson(data);
+  const validatedJson = validateJsonCoord(data);
   // convert to geojson
   const geojson = convertJson(validatedJson);
   return geojson;
 }
 
-async function fromJSON(file: File){
+async function fromJSON(file: File, useAddress: boolean){
   // to string
   const text = await file.text();
   // to JSON
   const json = JSON.parse(text);
-  // validate
-  const validatedJson = validateJson(json);
-  // convert to geojson
-  const geojson = convertJson(validatedJson);
-  return geojson;
+  // validate based on useAddress
+  if(useAddress){
+    // validate with address schema
+    const validatedAddrJson = validateJsonAddr(json);
+    // geocode (returns a FeatureCollection)
+    const geocodedJson = geocode(validatedAddrJson);
+    return geocodedJson;
+  } else {
+    // validate, then convert to FeatureCollection
+    const validatedJson = validateJsonCoord(json);
+    // convert to geojson
+    const geojson = convertJson(validatedJson);
+    return geojson;
+  }
 }
 
 async function fromGeoJSON(file: File){
@@ -78,7 +88,7 @@ export default function Home() {
     setFilename(file.name);
     try {
       // convert based on format
-      const data = await converterMap[fileFormat](file);
+      const data = await converterMap[fileFormat](file, useAddress);
       // update state
       if(!data) throw new Error("Unrecognized file format.");
       setGeojsonData(data);

@@ -32,7 +32,6 @@ export default function FileInput({ fileFormat, handleFile, clearFile }: FileInp
   function handleChange(e: ChangeEvent<HTMLInputElement>){
     if(e.target.files?.length){
       const file = e.target.files[0];
-      console.log('Imported:', file);
       handleFile(file);
     }
   }
