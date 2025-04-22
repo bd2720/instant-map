@@ -13,7 +13,7 @@ import { geocode } from './lib/geocode';
 
 export type FileFormat = "csv" | "json" | "geojson" | "sample";
 
-async function fromCSV(file: File){
+async function fromCSV(file: File, useAddress: boolean){
   const parserPromise: Promise<ParseResult<Object>> = new Promise((resolve, reject) => {
     // Papa parse
     parse<Object>(file, { 
@@ -30,11 +30,20 @@ async function fromCSV(file: File){
 
   // to JSON (Papa parse)
   const { data } = await parserPromise;
-  // validate json
-  const validatedJson = validateJsonCoord(data);
-  // convert to geojson
-  const geojson = convertJson(validatedJson);
-  return geojson;
+  // validate based on useAddress
+  if(useAddress){
+    // validate with address schema
+    const validatedAddrJson = validateJsonAddr(data);
+    // geocode (returns a FeatureCollection)
+    const geocodedJson = geocode(validatedAddrJson);
+    return geocodedJson;
+  } else {
+    // validate, then convert to FeatureCollection
+    const validatedJson = validateJsonCoord(data);
+    // convert to geojson
+    const geojson = convertJson(validatedJson);
+    return geojson;
+  }
 }
 
 async function fromJSON(file: File, useAddress: boolean){
