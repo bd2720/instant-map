@@ -21,7 +21,7 @@ export async function geocode(addresses: JSONAddresses): Promise<GeoJSONSchema> 
     limit: 1, // limit number of results per address
     q: a.address
   }));
-  console.log('batch:', apiBatch);
+  console.log('batch in:', apiBatch);
   const geocodePromise: Promise<GeocoderResult> = new Promise((resolve, reject) => {
     fetch(geocoder, {
       method: "POST",
@@ -37,10 +37,15 @@ export async function geocode(addresses: JSONAddresses): Promise<GeoJSONSchema> 
       });
   });
   const { batch } = await geocodePromise;
+  console.log('batch out:', batch);
   // results are a list of featurecollections; must map to just one
-  const features = batch.map(result => result.features[0]);
+  const features = batch.map(result => result.features[0] ?? null);
   // insert properties from original object
   features.forEach((f, i) => {
+    // error if the feature is null
+    if(f === null){
+      throw new Error(`Failed to geocode address ${i+1}. Please verify street address and try again.`);
+    }
     const {address, ...properties} = addresses[i];
     f.properties = {
       address: address,
