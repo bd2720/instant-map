@@ -12,7 +12,7 @@ interface GeocoderResult {
 export async function geocode(addresses: JSONAddresses): Promise<GeoJSONSchema> {
   // verify limit
   if(addresses.length > GEOCODER_LIMIT) {
-    throw new Error(`Geocoding error: too many addresses (limit ${GEOCODER_LIMIT}, received ${addresses.length}`);
+    throw new Error(`Geocoding error: too many addresses (limit ${GEOCODER_LIMIT}, received ${addresses.length})`);
   }
 
   // use batch geocoding

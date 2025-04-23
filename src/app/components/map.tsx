@@ -5,6 +5,7 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import { Feature, FeatureCollection, Point } from 'geojson';
 import { useEffect, useRef, useState } from 'react';
 import { usePinImage } from '../hooks/usePinImage';
+import MapControls from './map-controls';
 
 interface MapProps {
   data: FeatureCollection<Point> | null
@@ -15,13 +16,10 @@ export default function Map({ data }: MapProps){
   const [mapLoaded, setMapLoaded] = useState(false);
   const [hoveredPointId, setHoveredPointId] = useState<string | number | undefined>();
   const [selectedPoint, setSelectedPoint] = useState<Feature<Point>>();
+  const [renderPins, setRenderPins] = useState(false);
   
   // load pin image in custom hook
   const imageLoaded = usePinImage(mapRef, mapLoaded);
-
-  // determine number of features (use point layer if too many)
-  const numFeatures = data?.features.length ?? 0;
-  const renderPins = numFeatures < 1000;
 
   // reset hovered/selected points when new map data load
   useEffect(() => {
@@ -141,6 +139,10 @@ export default function Map({ data }: MapProps){
             </ul>
           </Popup>
         )}
+        <MapControls 
+          renderPins={renderPins} 
+          toggleRenderPins={() => setRenderPins(r => !r)}
+          />
         <NavigationControl />
       </ReactMapGL>
   );
