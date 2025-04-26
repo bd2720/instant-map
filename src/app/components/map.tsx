@@ -48,6 +48,7 @@ export default function Map({ data }: MapProps){
         ref={mapRef}
         style={{width: "100%", height: "100%"}}
         mapStyle="mapbox://styles/mapbox/light-v11"
+        projection="mercator"
         initialViewState={{
           longitude: -74,
           latitude: 40.68,
@@ -111,7 +112,7 @@ export default function Map({ data }: MapProps){
         )}
         {data && selectedPoint && (
           <Popup longitude={selectedPoint.geometry.coordinates[0]} latitude={selectedPoint.geometry.coordinates[1]}
-            className="text-xl text-slate-950"
+            className="text-xl text-slate-950 break-all"
             onClose={() => setSelectedPoint(undefined)}
             closeOnClick={false}
             offset={(renderPins) ? {

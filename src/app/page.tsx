@@ -13,23 +13,8 @@ import { geocode } from './lib/geocode';
 
 export type FileFormat = "csv" | "json" | "geojson" | "sample";
 
-async function fromCSV(file: File, useAddress: boolean){
-  const parserPromise: Promise<ParseResult<Object>> = new Promise((resolve, reject) => {
-    // Papa parse
-    parse<Object>(file, { 
-      delimiter: ",",
-      header: true,
-      complete: (results, _) => {
-        resolve(results);
-      },
-      error: (errors, _) => {
-        reject(errors);
-      }
-    });
-  });
-
-  // to JSON (Papa parse)
-  const { data } = await parserPromise;
+// validates, geocodes and/or parses Object to GeoJSON
+function parsedToGeojson(data: Object[], useAddress: boolean){
   // validate based on useAddress
   if(useAddress){
     // validate with address schema
@@ -46,25 +31,32 @@ async function fromCSV(file: File, useAddress: boolean){
   }
 }
 
+async function fromCSV(file: File, useAddress: boolean){
+  const parserPromise: Promise<ParseResult<Object>> = new Promise((resolve, reject) => {
+    // Papa parse
+    parse<Object>(file, { 
+      delimiter: ",",
+      header: true,
+      complete: (results, _) => {
+        resolve(results);
+      },
+      error: (errors, _) => {
+        reject(errors);
+      }
+    });
+  });
+  // to JSON (Papa parse)
+  const { data } = await parserPromise;
+  return parsedToGeojson(data, useAddress);
+}
+
 async function fromJSON(file: File, useAddress: boolean){
   // to string
   const text = await file.text();
   // to JSON
   const json = JSON.parse(text);
-  // validate based on useAddress
-  if(useAddress){
-    // validate with address schema
-    const validatedAddrJson = validateJsonAddr(json);
-    // geocode (returns a FeatureCollection)
-    const geocodedJson = geocode(validatedAddrJson);
-    return geocodedJson;
-  } else {
-    // validate, then convert to FeatureCollection
-    const validatedJson = validateJsonCoord(json);
-    // convert to geojson
-    const geojson = convertJson(validatedJson);
-    return geojson;
-  }
+  return parsedToGeojson(json, useAddress);
+
 }
 
 async function fromGeoJSON(file: File){
@@ -73,8 +65,7 @@ async function fromGeoJSON(file: File){
   // to JSON
   const json = JSON.parse(text);
   // validate as GeoJSON (FeatureCollection)
-  const geojson = validateGeojson(json);
-  return geojson;
+  return validateGeojson(json);
 }
 
 const converterMap = {
@@ -111,7 +102,7 @@ export default function Home() {
           const issue = err.issues[0];
           const pathStr = issue.path.length ? `"${issue.path.join('.')}"` : '(Object root)';
           if(issue){
-            setError(`Error: ${issue.message} at ${pathStr}`);
+            setError(`Error: ${issue.message}. Path: ${pathStr}`);
           } else {
             setError(`Error while parsing file "${file.name}"`);
           }
