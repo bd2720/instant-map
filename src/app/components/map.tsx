@@ -7,13 +7,16 @@ import { useEffect, useRef, useState } from 'react';
 import { usePinImage } from '../hooks/usePinImage';
 import MapControls from './map-controls';
 
+const mapToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
+
 interface MapProps {
   data: FeatureCollection<Point> | null
+  mapLoaded: boolean
+  onLoad: () => void
 }
 
-export default function Map({ data }: MapProps){
+export default function Map({ data, mapLoaded, onLoad }: MapProps){
   const mapRef = useRef<MapRef>(null);
-  const [mapLoaded, setMapLoaded] = useState(false);
   const [hoveredPointId, setHoveredPointId] = useState<string | number | undefined>();
   const [selectedPoint, setSelectedPoint] = useState<Feature<Point>>();
   const [renderPins, setRenderPins] = useState(false);
@@ -42,109 +45,120 @@ export default function Map({ data }: MapProps){
     setSelectedPoint((clickedPoint.id !== selectedPoint?.id) ? clickedPoint : undefined);
   }
 
+  // render error message if the access token is not provided
+  if(!mapToken){
+    console.error('Error: Cannot display map; invalid access token.');
+    return (
+      <div className="bg-slate-500 w-full h-full text-center pt-40">
+          <h2 className="font-bold text-4xl text-red-300">ERROR</h2>
+          <p className="text-2xl text-red-100">Cannot display map; invalid access token</p>
+      </div>
+    );
+  }
+
   return (
-      <ReactMapGL
-        mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
-        ref={mapRef}
-        style={{width: "100%", height: "100%"}}
-        mapStyle="mapbox://styles/mapbox/light-v11"
-        projection="mercator"
-        initialViewState={{
-          longitude: -74,
-          latitude: 40.68,
-          zoom: 10,
-        }}
-        interactiveLayerIds={["data-pin", "data-point"]}
-        cursor={(hoveredPointId !== undefined) ? 'pointer' : undefined}
-        onLoad={() => setMapLoaded(true)}
-        onMouseMove={handleMouseMove}
-        onMouseDown={handleMouseDown}
-      >
-        {data && imageLoaded && (
-          <Source type="geojson" data={data} generateId key={renderPins ? "symbol-source" : "circle-source"}>
-            {
-              (renderPins) ? (
-                <Layer type="symbol" id="data-pin"
-                  layout={{
-                    "icon-allow-overlap": true,
-                    "icon-image": "pin",
-                    "icon-size": 0.69,
-                    "icon-offset": [0, -25],
-                    "symbol-sort-key": [
-                      "case",
-                      ["==", ["id"], hoveredPointId ?? null], 2,
-                      ["==", ["id"], selectedPoint?.id ?? null], 1,
-                      0
-                    ]
-                  }}
-                  paint={{
-                    "icon-color": [
-                      "case",
-                      ["==", ["id"], hoveredPointId ?? null], "#64748b",
-                      ["==", ["id"], selectedPoint?.id ?? null], "#64748b",
-                      "#020617"
-                    ]
-                  }}
-                />
-              ) : (
-                <Layer type="circle" id="data-point"
-                  layout={{
-                    "circle-sort-key": [
-                      "case",
-                      ["==", ["id"], hoveredPointId ?? null], 2,
-                      ["==", ["id"], selectedPoint?.id ?? null], 1,
-                      0
-                    ]
-                  }}
-                  paint={{
-                    "circle-radius": 5,
-                    "circle-color": [
-                      "case",
-                      ["==", ["id"], hoveredPointId ?? null], "#64748b",
-                      ["==", ["id"], selectedPoint?.id ?? null], "#64748b",
-                      "#020617"
-                    ]                    
-                  }}
-                />
-              )
-            }  
-          </Source>
-        )}
-        {data && selectedPoint && (
-          <Popup longitude={selectedPoint.geometry.coordinates[0]} latitude={selectedPoint.geometry.coordinates[1]}
-            className="text-xl text-slate-950 break-all"
-            onClose={() => setSelectedPoint(undefined)}
-            closeOnClick={false}
-            offset={(renderPins) ? {
-              "bottom": [0, -36],
-              "left": [14, -23],
-              "right": [-14, -23],
-              "bottom-left": [0, -36],
-              "bottom-right": [0, -36],
-            } : 4}
-          >
-            <h2 className="font-bold text-slate-700 text-center">
-              Properties
-            </h2>
-            <ul>
-              {Object.entries(selectedPoint.properties ?? {}).map(([name, property]) => (
-                <li key={name} className="text-sm">
-                  <span className="text-slate-700 font-bold">
-                    {name}:{' '}
-                  </span>
-                  <span className="text-slate-500">
-                    {property}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </Popup>
-        )}
-        <MapControls 
-          renderPins={renderPins} 
-          toggleRenderPins={() => setRenderPins(r => !r)}
-          />
-        <NavigationControl />
-      </ReactMapGL>
+    <ReactMapGL
+      mapboxAccessToken={mapToken}
+      ref={mapRef}
+      style={{width: "100%", height: "100%"}}
+      mapStyle="mapbox://styles/mapbox/light-v11"
+      projection="mercator"
+      initialViewState={{
+        longitude: -74,
+        latitude: 40.68,
+        zoom: 10,
+      }}
+      interactiveLayerIds={["data-pin", "data-point"]}
+      cursor={(hoveredPointId !== undefined) ? 'pointer' : undefined}
+      onLoad={onLoad}
+      onMouseMove={handleMouseMove}
+      onMouseDown={handleMouseDown}
+    >
+      {data && imageLoaded && (
+        <Source type="geojson" data={data} generateId key={renderPins ? "symbol-source" : "circle-source"}>
+          {
+            (renderPins) ? (
+              <Layer type="symbol" id="data-pin"
+                layout={{
+                  "icon-allow-overlap": true,
+                  "icon-image": "pin",
+                  "icon-size": 0.69,
+                  "icon-offset": [0, -25],
+                  "symbol-sort-key": [
+                    "case",
+                    ["==", ["id"], hoveredPointId ?? null], 2,
+                    ["==", ["id"], selectedPoint?.id ?? null], 1,
+                    0
+                  ]
+                }}
+                paint={{
+                  "icon-color": [
+                    "case",
+                    ["==", ["id"], hoveredPointId ?? null], "#64748b",
+                    ["==", ["id"], selectedPoint?.id ?? null], "#64748b",
+                    "#020617"
+                  ]
+                }}
+              />
+            ) : (
+              <Layer type="circle" id="data-point"
+                layout={{
+                  "circle-sort-key": [
+                    "case",
+                    ["==", ["id"], hoveredPointId ?? null], 2,
+                    ["==", ["id"], selectedPoint?.id ?? null], 1,
+                    0
+                  ]
+                }}
+                paint={{
+                  "circle-radius": 5,
+                  "circle-color": [
+                    "case",
+                    ["==", ["id"], hoveredPointId ?? null], "#64748b",
+                    ["==", ["id"], selectedPoint?.id ?? null], "#64748b",
+                    "#020617"
+                  ]                    
+                }}
+              />
+            )
+          }  
+        </Source>
+      )}
+      {data && selectedPoint && (
+        <Popup longitude={selectedPoint.geometry.coordinates[0]} latitude={selectedPoint.geometry.coordinates[1]}
+          className="text-xl text-slate-950 break-all"
+          onClose={() => setSelectedPoint(undefined)}
+          closeOnClick={false}
+          offset={(renderPins) ? {
+            "bottom": [0, -36],
+            "left": [14, -23],
+            "right": [-14, -23],
+            "bottom-left": [0, -36],
+            "bottom-right": [0, -36],
+          } : 4}
+        >
+          <h2 className="font-bold text-slate-700 text-center">
+            Properties
+          </h2>
+          <ul>
+            {Object.entries(selectedPoint.properties ?? {}).map(([name, property]) => (
+              <li key={name} className="text-sm">
+                <span className="text-slate-700 font-bold">
+                  {name}:{' '}
+                </span>
+                <span className="text-slate-500">
+                  {property}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </Popup>
+      )}
+      <MapControls 
+        renderPins={renderPins} 
+        toggleRenderPins={() => setRenderPins(r => !r)}
+        />
+      <NavigationControl />
+    </ReactMapGL>
   );
 }

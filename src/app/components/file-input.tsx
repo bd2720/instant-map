@@ -7,11 +7,12 @@ import { useSampleData } from '../hooks/useSampleData';
 
 interface FileInputProps {
   fileFormat: FileFormat
+  mapLoaded: boolean
   handleFile: (file: File) => void
   clearFile: () => void
 }
 
-export default function FileInput({ fileFormat, handleFile, clearFile }: FileInputProps){
+export default function FileInput({ fileFormat, mapLoaded, handleFile, clearFile }: FileInputProps){
   // ref to file input HTML element
   const hiddenFileInput = useRef<HTMLInputElement>(null);
 
@@ -46,7 +47,7 @@ export default function FileInput({ fileFormat, handleFile, clearFile }: FileInp
   return (
     <div className="flex flex-wrap justify-center gap-2">
       <>
-        <Button onClick={handleClick}>
+        <Button disabled={!mapLoaded} onClick={handleClick}>
           Import
         </Button>
         <input
@@ -58,7 +59,7 @@ export default function FileInput({ fileFormat, handleFile, clearFile }: FileInp
           onChange={handleChange}
         />
       </>
-      <Button onClick={handleReset}>
+      <Button disabled={!mapLoaded} onClick={handleReset}>
         Reset
       </Button>
     </div>

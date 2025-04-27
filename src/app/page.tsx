@@ -81,6 +81,7 @@ export default function Home() {
   const [fileFormat, setFileFormat] = useState<FileFormat>("geojson");
   const [error, setError] = useState<string>("");
   const [useAddress, setUseAddress] = useState(false);
+  const [mapLoaded, setMapLoaded] = useState(false);
 
   // handle file upload (parse as GeoJSON)
   async function handleFile(file: File){
@@ -126,7 +127,7 @@ export default function Home() {
       <Header />
       <main className="flex flex-1">
         <div className="w-[80%] h-full">
-          <Map data={geojsonData} />
+          <Map data={geojsonData} mapLoaded={mapLoaded} onLoad={() => setMapLoaded(true)} />
         </div>
         <div className="w-[20%] h-full">
           <Sidebar 
@@ -140,6 +141,7 @@ export default function Home() {
             error={error}
             handleFile={handleFile}
             clearFile={handleReset}
+            mapLoaded={mapLoaded}
           />
         </div>
       </main>
