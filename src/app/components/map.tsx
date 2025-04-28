@@ -45,20 +45,34 @@ export default function Map({ data, mapLoaded, onLoad }: MapProps){
     setSelectedPoint((clickedPoint.id !== selectedPoint?.id) ? clickedPoint : undefined);
   }
 
+  // redirect mapbox requests to proxy
+  function redirectToProxy(url: string){
+    // ONLY redirect Mapbox API requests
+    console.log('url from react-map-gl:', url);
+
+    const mapboxPath = url.split('api.mapbox.com/')[1];
+    if(!mapboxPath) return { url };
+    // TODO: address this (explicit origin required in string)
+    const proxyUrl = `http://localhost:3000/api/map-proxy/${mapboxPath}`;
+    console.log('proxyUrl:', proxyUrl);
+    return { url: proxyUrl };
+  }
+
   // render error message if the access token is not provided
   if(!mapToken){
     console.error('Error: Cannot display map; invalid access token.');
     return (
       <div className="bg-slate-500 w-full h-full text-center pt-40">
-          <h2 className="font-bold text-4xl text-red-300">ERROR</h2>
-          <p className="text-2xl text-red-100">Cannot display map; invalid access token</p>
+        <h2 className="font-bold text-4xl text-red-300">ERROR</h2>
+        <p className="text-2xl text-red-100">Cannot display map; invalid access token</p>
       </div>
     );
   }
 
   return (
     <ReactMapGL
-      mapboxAccessToken={mapToken}
+      transformRequest={redirectToProxy}
+      mapboxAccessToken={"_"}
       ref={mapRef}
       style={{width: "100%", height: "100%"}}
       mapStyle="mapbox://styles/mapbox/light-v11"
