@@ -6,6 +6,13 @@ import { Feature, FeatureCollection, Point } from 'geojson';
 import { useEffect, useRef, useState } from 'react';
 import { usePinImage } from '../hooks/usePinImage';
 import MapControls from './map-controls';
+import mapboxgl from 'mapbox-gl';
+
+// Configure Mapbox GL
+mapboxgl.config.API_URL = 'http://localhost:3000/api/map-proxy';
+mapboxgl.config.REQUIRE_ACCESS_TOKEN = false;
+mapboxgl.config.SESSION_PATH = '';
+//mapboxgl.config.EVENTS_URL = null; // read-only
 
 const mapToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
@@ -71,8 +78,7 @@ export default function Map({ data, mapLoaded, onLoad }: MapProps){
 
   return (
     <ReactMapGL
-      transformRequest={redirectToProxy}
-      mapboxAccessToken={"_"}
+      mapLib={mapboxgl}
       ref={mapRef}
       style={{width: "100%", height: "100%"}}
       mapStyle="mapbox://styles/mapbox/light-v11"

@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 
-const ALLOWED_PATHS = [
+const ALLOWED_GET_PATHS = [
   /^styles\/v1\//,
   /^tiles\/v[34]\//,
   /^fonts\/v1\//,
@@ -17,7 +17,7 @@ export async function GET(req: NextRequest, context: { params: { path: string[] 
   const joinedPath = path.join('/');
   
   // 403 if token invalid or path not allowed
-  if(!MAPBOX_TOKEN || !ALLOWED_PATHS.some(rx => rx.test(joinedPath))) {
+  if(!MAPBOX_TOKEN || !ALLOWED_GET_PATHS.some(rx => rx.test(joinedPath))) {
     return new Response('Forbidden', { status: 403 });
   }
 
