@@ -1,11 +1,9 @@
 import { NextRequest } from "next/server";
 
-const ALLOWED_GET_PATHS = [
-  /^styles\/v1\//,
-  /^tiles\/v[34]\//,
-  /^fonts\/v1\//,
-  /^sprites\/v1\//,
-  /^v[34]\//
+const ALLOWED_PATHS = [
+  /^styles\/v1\//, // Mapbox styles
+  /^fonts\/v1\//, // Mapbox fonts
+  /^v4\//, // Mapbox vector tiles
 ];
 
 const MAPBOX_BASE = 'https://api.mapbox.com';
@@ -17,7 +15,7 @@ export async function GET(req: NextRequest, context: { params: { path: string[] 
   const joinedPath = path.join('/');
   
   // 403 if token invalid or path not allowed
-  if(!MAPBOX_TOKEN || !ALLOWED_GET_PATHS.some(rx => rx.test(joinedPath))) {
+  if(!MAPBOX_TOKEN || !ALLOWED_PATHS.some(rx => rx.test(joinedPath))) {
     return new Response('Forbidden', { status: 403 });
   }
 
@@ -32,10 +30,9 @@ export async function GET(req: NextRequest, context: { params: { path: string[] 
 
   // extract values from Mapbox response
   const contentType = mapboxRes.headers.get('content-type') || 'application/octet-stream';
-  const body = await mapboxRes.arrayBuffer();
 
   // forward response body + staus + headers
-  return new Response(body, {
+  return new Response(mapboxRes.body, {
     status: mapboxRes.status,
     headers: {
       'Content-Type': contentType,
@@ -43,3 +40,4 @@ export async function GET(req: NextRequest, context: { params: { path: string[] 
     }
   });
 }
+

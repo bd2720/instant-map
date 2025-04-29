@@ -81,7 +81,7 @@ export default function Map({ data, mapLoaded, onLoad }: MapProps){
       mapLib={mapboxgl}
       ref={mapRef}
       style={{width: "100%", height: "100%"}}
-      mapStyle="mapbox://styles/mapbox/light-v11"
+      mapStyle="mapbox://styles/mapbox/streets-v12"
       projection="mercator"
       initialViewState={{
         longitude: -74,

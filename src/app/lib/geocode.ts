@@ -1,6 +1,7 @@
 import { JSONAddresses, GeoJSONSchema } from "./validate";
 
-const geocoder = `https://api.mapbox.com/search/geocode/v6/batch?access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}`;
+// use map-proxy
+const geocoder = `http://localhost:3000/api/map-proxy/search/geocode/v6/batch`;
 const GEOCODER_LIMIT = 100;
 
 // define the API return type
