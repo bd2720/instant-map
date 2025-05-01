@@ -10,11 +10,12 @@ import mapboxgl from 'mapbox-gl';
 
 // Configure Mapbox GL
 mapboxgl.config.API_URL = 'http://localhost:3000/api/map-proxy';
-mapboxgl.config.REQUIRE_ACCESS_TOKEN = false;
-mapboxgl.config.SESSION_PATH = '';
-//mapboxgl.config.EVENTS_URL = null; // read-only
-
-const mapToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
+//mapboxgl.config.REQUIRE_ACCESS_TOKEN = false;
+Object.defineProperty(mapboxgl.config, "EVENTS_URL", {
+  value: 'http://localhost:3000/api/map-proxy/events/v2',
+  writable: true,
+  configurable: true,
+});
 
 interface MapProps {
   data: FeatureCollection<Point> | null
@@ -27,6 +28,7 @@ export default function Map({ data, mapLoaded, onLoad }: MapProps){
   const [hoveredPointId, setHoveredPointId] = useState<string | number | undefined>();
   const [selectedPoint, setSelectedPoint] = useState<Feature<Point>>();
   const [renderPins, setRenderPins] = useState(false);
+  const [mapError, setMapError] = useState('');
   
   // load pin image in custom hook
   const imageLoaded = usePinImage(mapRef, mapLoaded);
@@ -52,36 +54,25 @@ export default function Map({ data, mapLoaded, onLoad }: MapProps){
     setSelectedPoint((clickedPoint.id !== selectedPoint?.id) ? clickedPoint : undefined);
   }
 
-  // redirect mapbox requests to proxy
-  function redirectToProxy(url: string){
-    // ONLY redirect Mapbox API requests
-    console.log('url from react-map-gl:', url);
-
-    const mapboxPath = url.split('api.mapbox.com/')[1];
-    if(!mapboxPath) return { url };
-    // TODO: address this (explicit origin required in string)
-    const proxyUrl = `http://localhost:3000/api/map-proxy/${mapboxPath}`;
-    console.log('proxyUrl:', proxyUrl);
-    return { url: proxyUrl };
-  }
-
-  // render error message if the access token is not provided
-  if(!mapToken){
-    console.error('Error: Cannot display map; invalid access token.');
+  // render error message on map error
+  if(mapError){
+    console.error(mapError);
     return (
-      <div className="bg-slate-500 w-full h-full text-center pt-40">
-        <h2 className="font-bold text-4xl text-red-300">ERROR</h2>
-        <p className="text-2xl text-red-100">Cannot display map; invalid access token</p>
+      <div className="bg-slate-500 w-full h-full pt-40 text-center flex flex-col items-center">
+        <h2 className="font-bold text-4xl text-red-300">ERROR LOADING MAP</h2>
+        <p className="text-2xl text-red-100 w-1/2">{mapError}</p>
       </div>
     );
   }
-
+  
+  // filler access token is required so that SKU is attached to Vector API calls
   return (
     <ReactMapGL
+      mapboxAccessToken={'_'}
       mapLib={mapboxgl}
       ref={mapRef}
       style={{width: "100%", height: "100%"}}
-      mapStyle="mapbox://styles/mapbox/streets-v12"
+      mapStyle="mapbox://styles/mapbox/light-v11"
       projection="mercator"
       initialViewState={{
         longitude: -74,
@@ -91,6 +82,7 @@ export default function Map({ data, mapLoaded, onLoad }: MapProps){
       interactiveLayerIds={["data-pin", "data-point"]}
       cursor={(hoveredPointId !== undefined) ? 'pointer' : undefined}
       onLoad={onLoad}
+      onError={(e) => setMapError(e.error.message)}
       onMouseMove={handleMouseMove}
       onMouseDown={handleMouseDown}
     >
@@ -146,7 +138,7 @@ export default function Map({ data, mapLoaded, onLoad }: MapProps){
       )}
       {data && selectedPoint && (
         <Popup longitude={selectedPoint.geometry.coordinates[0]} latitude={selectedPoint.geometry.coordinates[1]}
-          className="text-xl text-slate-950 break-all"
+          className="text-xl text-slate-950 wrap-break-word"
           onClose={() => setSelectedPoint(undefined)}
           closeOnClick={false}
           offset={(renderPins) ? {
