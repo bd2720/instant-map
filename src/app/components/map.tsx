@@ -11,8 +11,9 @@ import mapboxgl from 'mapbox-gl';
 // Configure Mapbox GL
 mapboxgl.config.API_URL = 'http://localhost:3000/api/map-proxy';
 //mapboxgl.config.REQUIRE_ACCESS_TOKEN = false;
+// disable telemetry (events)
 Object.defineProperty(mapboxgl.config, "EVENTS_URL", {
-  value: 'http://localhost:3000/api/map-proxy/events/v2',
+  value: null,
   writable: true,
   configurable: true,
 });
