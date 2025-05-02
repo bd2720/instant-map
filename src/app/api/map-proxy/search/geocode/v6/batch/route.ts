@@ -1,4 +1,5 @@
 import { NextRequest } from "next/server";
+import { limits } from "@/app/redis/limits";
 
 const MAPBOX_BASE = 'https://api.mapbox.com';
 const MAPBOX_TOKEN = process.env.MAPBOX_TOKEN;
@@ -21,9 +22,12 @@ export async function POST(req: NextRequest){
     return new Response(`Too many locations in batch (received: ${batch.length}, max: ${GEOCODING_LIMIT})`, { status: 413 });
   }
 
+  // use Redis to test and set limit
+  const limitResponse = await limits('canRequestGeocoding', 'geocodingRequests', batch.length);
+  if(limitResponse !== null) return limitResponse;
+
   // construct and fetch URL
   const fullUrl = `${MAPBOX_BASE}/search/geocode/v6/batch?access_token=${MAPBOX_TOKEN}`;
-
   const mapboxRes = await fetch(fullUrl, {
     method: 'POST',
     headers: {
