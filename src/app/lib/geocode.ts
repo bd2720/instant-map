@@ -28,13 +28,18 @@ export async function geocode(addresses: JSONAddresses): Promise<GeoJSONSchema> 
       method: "POST",
       body: JSON.stringify(apiBatch),
     })
-      .then(res => res.json())
+      .then(async res => {
+        if(!res.ok){ // API limit errors are caught here
+          const errorText = await res.text();
+          throw new Error(`${errorText}`);
+        }
+        return res.json();
+      })
       .then(json => {
         resolve(json);
       })
       .catch(err => {
-        console.error('Geocoding error:', err);
-        reject(null);
+        reject(err);
       });
   });
   const { batch } = await geocodePromise;
