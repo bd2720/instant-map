@@ -3,7 +3,7 @@ import { type PropsWithChildren, type ChangeEventHandler} from "react";
 interface RadioProps extends PropsWithChildren {
   id: string
   name: string
-  value: any
+  value: string | number | readonly string[] | undefined
   checked: boolean
   disabled?: boolean
   onChange: ChangeEventHandler<HTMLInputElement>

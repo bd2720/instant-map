@@ -13,8 +13,8 @@ import { geocode } from './lib/geocode';
 
 export type FileFormat = "csv" | "json" | "geojson" | "sample";
 
-// validates, geocodes and/or parses Object to GeoJSON
-function parsedToGeojson(data: Object[], useAddress: boolean){
+// validates, geocodes and/or parses object to GeoJSON
+function parsedToGeojson(data: object[], useAddress: boolean){
   // validate based on useAddress
   if(useAddress){
     // validate with address schema
@@ -32,15 +32,15 @@ function parsedToGeojson(data: Object[], useAddress: boolean){
 }
 
 async function fromCSV(file: File, useAddress: boolean){
-  const parserPromise: Promise<ParseResult<Object>> = new Promise((resolve, reject) => {
+  const parserPromise: Promise<ParseResult<object>> = new Promise((resolve, reject) => {
     // Papa parse
-    parse<Object>(file, { 
+    parse<object>(file, { 
       delimiter: ",",
       header: true,
-      complete: (results, _) => {
+      complete: (results) => {
         resolve(results);
       },
-      error: (errors, _) => {
+      error: (errors) => {
         reject(errors);
       }
     });
@@ -82,6 +82,7 @@ export default function Home() {
   const [error, setError] = useState<string>("");
   const [useAddress, setUseAddress] = useState(false);
   const [mapLoaded, setMapLoaded] = useState(false);
+  const [mapError, setMapError] = useState<string>("");
 
   // handle file upload (parse as GeoJSON)
   async function handleFile(file: File){
@@ -127,7 +128,13 @@ export default function Home() {
       <Header />
       <main className="flex flex-1">
         <div className="w-[80%] h-full">
-          <Map data={geojsonData} mapLoaded={mapLoaded} onLoad={() => setMapLoaded(true)} />
+          <Map 
+            data={geojsonData}
+            mapLoaded={mapLoaded}
+            mapError={mapError}
+            onLoad={() => setMapLoaded(true)}
+            onError={(e) => setMapError(e.error.message)}
+          />
         </div>
         <div className="w-[20%] h-full">
           <Sidebar 
@@ -141,7 +148,7 @@ export default function Home() {
             error={error}
             handleFile={handleFile}
             clearFile={handleReset}
-            mapLoaded={mapLoaded}
+            disableFileInput={!mapLoaded || mapError.length > 0}
           />
         </div>
       </main>

@@ -1,7 +1,7 @@
 import { JSONAddresses, GeoJSONSchema } from "./validate";
 
 // use map-proxy
-const geocoder = `http://localhost:3000/api/map-proxy/search/geocode/v6/batch`;
+const geocoder = `${process.env.NEXT_PUBLIC_URL}/api/map-proxy/search/geocode/v6/batch`;
 const GEOCODER_LIMIT = 100;
 
 // define the API return type

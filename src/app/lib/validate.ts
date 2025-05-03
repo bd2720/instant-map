@@ -19,7 +19,7 @@ const geojsonSchema = z.object({
 export type GeoJSONSchema = z.infer<typeof geojsonSchema>;
 
 /** Validate GeoJSON Point data */
-export function validateGeojson(data: Object){
+export function validateGeojson(data: object){
   return geojsonSchema.parse(data);
 }
 
@@ -38,10 +38,10 @@ export type JSONAddresses = z.infer<typeof jsonAddrSchema>;
 
 /* Validate JSON data  */
 
-export function validateJsonCoord(data: Object){
+export function validateJsonCoord(data: object){
   return jsonCoordSchema.parse(data);
 }
 
-export function validateJsonAddr(data: Object){
+export function validateJsonAddr(data: object){
   return jsonAddrSchema.parse(data);
 }

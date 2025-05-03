@@ -1,6 +1,6 @@
 "use client";
 
-import ReactMapGL, { type MapRef, type MapMouseEvent, Source, Layer, Popup, NavigationControl } from 'react-map-gl/mapbox';
+import ReactMapGL, { type MapRef, type MapMouseEvent, type ErrorEvent, Source, Layer, Popup, NavigationControl } from 'react-map-gl/mapbox';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { Feature, FeatureCollection, Point } from 'geojson';
 import { useEffect, useRef, useState } from 'react';
@@ -9,7 +9,7 @@ import MapControls from './map-controls';
 import mapboxgl from 'mapbox-gl';
 
 // Configure Mapbox GL
-mapboxgl.config.API_URL = 'http://localhost:3000/api/map-proxy';
+mapboxgl.config.API_URL = `${process.env.NEXT_PUBLIC_URL}/api/map-proxy`;
 //mapboxgl.config.REQUIRE_ACCESS_TOKEN = false;
 // disable telemetry (events)
 Object.defineProperty(mapboxgl.config, "EVENTS_URL", {
@@ -21,15 +21,16 @@ Object.defineProperty(mapboxgl.config, "EVENTS_URL", {
 interface MapProps {
   data: FeatureCollection<Point> | null
   mapLoaded: boolean
+  mapError: string
   onLoad: () => void
+  onError: (e: ErrorEvent) => void
 }
 
-export default function Map({ data, mapLoaded, onLoad }: MapProps){
+export default function Map({ data, mapLoaded, mapError, onLoad, onError }: MapProps){
   const mapRef = useRef<MapRef>(null);
   const [hoveredPointId, setHoveredPointId] = useState<string | number | undefined>();
   const [selectedPoint, setSelectedPoint] = useState<Feature<Point>>();
   const [renderPins, setRenderPins] = useState(false);
-  const [mapError, setMapError] = useState('');
   
   // load pin image in custom hook
   const imageLoaded = usePinImage(mapRef, mapLoaded);
@@ -60,7 +61,7 @@ export default function Map({ data, mapLoaded, onLoad }: MapProps){
     console.error(mapError);
     return (
       <div className="bg-slate-500 w-full h-full pt-40 text-center flex flex-col items-center">
-        <h2 className="font-bold text-4xl text-red-300">ERROR LOADING MAP</h2>
+        <h2 className="font-bold text-4xl text-red-300">MAP ERROR</h2>
         <p className="text-2xl text-red-100 w-1/2">{mapError}</p>
       </div>
     );
@@ -83,7 +84,10 @@ export default function Map({ data, mapLoaded, onLoad }: MapProps){
       interactiveLayerIds={["data-pin", "data-point"]}
       cursor={(hoveredPointId !== undefined) ? 'pointer' : undefined}
       onLoad={onLoad}
-      onError={(e) => setMapError(e.error.message)}
+      onError={(e) => {
+        console.error('IN Map.onError() -- error:', e);
+        onError(e);
+      }}
       onMouseMove={handleMouseMove}
       onMouseDown={handleMouseDown}
     >

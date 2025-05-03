@@ -28,7 +28,7 @@ export function usePinImage(mapRef: RefObject<MapRef | null>, mapLoaded: boolean
 
       }
     });
-  }, [mapLoaded]);
+  }, [mapRef, mapLoaded]);
 
   return imageLoaded;
 }
