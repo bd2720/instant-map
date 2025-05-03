@@ -10,9 +10,9 @@ const ALLOWED_PATHS = [
 const MAPBOX_BASE = 'https://api.mapbox.com';
 const MAPBOX_TOKEN = process.env.MAPBOX_TOKEN;
 
-export async function GET(req: NextRequest, context: { params: { path: string[] } }){
-  // await params, to fix an error, even though it shouldn't have any effect
-  const { path } = await context.params;
+export async function GET(req: NextRequest, { params }: { params: { path: string[] } }){
+  // await params to fix an error, even though it shouldn't have any effect
+  const { path } = await params;
   const joinedPath = path.join('/');
   
   // 403 if token invalid or path not allowed
