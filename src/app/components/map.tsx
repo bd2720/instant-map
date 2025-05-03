@@ -84,10 +84,7 @@ export default function Map({ data, mapLoaded, mapError, onLoad, onError }: MapP
       interactiveLayerIds={["data-pin", "data-point"]}
       cursor={(hoveredPointId !== undefined) ? 'pointer' : undefined}
       onLoad={onLoad}
-      onError={(e) => {
-        console.error('IN Map.onError() -- error:', e);
-        onError(e);
-      }}
+      onError={onError}
       onMouseMove={handleMouseMove}
       onMouseDown={handleMouseDown}
     >
