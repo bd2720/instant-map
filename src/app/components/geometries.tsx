@@ -13,7 +13,7 @@ export default function Geometries({ disabled, useAddress, setUseAddress }: Geom
             <Radio
               id={'addr'}
               name="geometry"
-              value={true}
+              value="t"
               checked={useAddress}
               disabled={disabled}
               onChange={() => setUseAddress(true)}
@@ -23,7 +23,7 @@ export default function Geometries({ disabled, useAddress, setUseAddress }: Geom
             <Radio
               id={'coord'}
               name="geometry"
-              value={false}
+              value="f"
               checked={!useAddress}
               disabled={disabled}
               onChange={() => setUseAddress(false)}
