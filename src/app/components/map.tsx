@@ -1,22 +1,12 @@
 "use client";
 
-import ReactMapGL, { type MapRef, type MapMouseEvent, type ErrorEvent, Source, Layer, Popup, NavigationControl } from 'react-map-gl/mapbox';
-import 'mapbox-gl/dist/mapbox-gl.css';
+import ReactMapGL, { type MapRef, type MapMouseEvent, type ErrorEvent, Source, Layer, Popup, NavigationControl } from 'react-map-gl/maplibre';
 import { Feature, FeatureCollection, Point } from 'geojson';
 import { useEffect, useRef, useState } from 'react';
-import { usePinImage } from '../hooks/usePinImage';
+import { usePinImages } from '../hooks/usePinImages';
 import MapControls from './map-controls';
-import mapboxgl from 'mapbox-gl';
-
-// Configure Mapbox GL
-mapboxgl.config.API_URL = `${process.env.NEXT_PUBLIC_URL}/api/map-proxy`;
-//mapboxgl.config.REQUIRE_ACCESS_TOKEN = false;
-// disable telemetry (events)
-Object.defineProperty(mapboxgl.config, "EVENTS_URL", {
-  value: null,
-  writable: true,
-  configurable: true,
-});
+import { type Offset } from 'maplibre-gl';
+import 'maplibre-gl/dist/maplibre-gl.css';
 
 interface MapProps {
   data: FeatureCollection<Point> | null
@@ -33,7 +23,7 @@ export default function Map({ data, mapLoaded, mapError, onLoad, onError }: MapP
   const [renderPins, setRenderPins] = useState(false);
   
   // load pin image in custom hook
-  const imageLoaded = usePinImage(mapRef, mapLoaded);
+  const imagesLoaded = usePinImages(mapRef, mapLoaded);
 
   // reset hovered/selected points when new map data load
   useEffect(() => {
@@ -67,19 +57,16 @@ export default function Map({ data, mapLoaded, mapError, onLoad, onError }: MapP
     );
   }
   
-  // filler access token is required so that SKU is attached to Vector API calls
   return (
     <ReactMapGL
-      mapboxAccessToken={'_'}
-      mapLib={mapboxgl}
       ref={mapRef}
       style={{width: "100%", height: "100%"}}
-      mapStyle="mapbox://styles/mapbox/light-v11"
+      mapStyle="https://tiles.openfreemap.org/styles/positron"
       projection="mercator"
       initialViewState={{
-        longitude: -74,
-        latitude: 40.68,
-        zoom: 10,
+        longitude: -73.267,
+        latitude: 41.102,
+        zoom: 8.5,
       }}
       interactiveLayerIds={["data-pin", "data-point"]}
       cursor={(hoveredPointId !== undefined) ? 'pointer' : undefined}
@@ -87,55 +74,51 @@ export default function Map({ data, mapLoaded, mapError, onLoad, onError }: MapP
       onError={onError}
       onMouseMove={handleMouseMove}
       onMouseDown={handleMouseDown}
+      hash
     >
-      {data && imageLoaded && (
+      {data && imagesLoaded && (
         <Source type="geojson" data={data} generateId key={renderPins ? "symbol-source" : "circle-source"}>
-          {
-            (renderPins) ? (
-              <Layer type="symbol" id="data-pin"
-                layout={{
-                  "icon-allow-overlap": true,
-                  "icon-image": "pin",
-                  "icon-size": 0.69,
-                  "icon-offset": [0, -25],
-                  "symbol-sort-key": [
-                    "case",
-                    ["==", ["id"], hoveredPointId ?? null], 2,
-                    ["==", ["id"], selectedPoint?.id ?? null], 1,
-                    0
-                  ]
-                }}
-                paint={{
-                  "icon-color": [
-                    "case",
-                    ["==", ["id"], hoveredPointId ?? null], "#64748b",
-                    ["==", ["id"], selectedPoint?.id ?? null], "#64748b",
-                    "#020617"
-                  ]
-                }}
-              />
-            ) : (
-              <Layer type="circle" id="data-point"
-                layout={{
-                  "circle-sort-key": [
-                    "case",
-                    ["==", ["id"], hoveredPointId ?? null], 2,
-                    ["==", ["id"], selectedPoint?.id ?? null], 1,
-                    0
-                  ]
-                }}
-                paint={{
-                  "circle-radius": 5,
-                  "circle-color": [
-                    "case",
-                    ["==", ["id"], hoveredPointId ?? null], "#64748b",
-                    ["==", ["id"], selectedPoint?.id ?? null], "#64748b",
-                    "#020617"
-                  ]                    
-                }}
-              />
-            )
-          }  
+          {(renderPins) ? (
+            <Layer type="symbol" id="data-pin"
+              layout={{
+                "icon-allow-overlap": true,
+                "icon-image": [
+                  "case",
+                  ["==", ["id"], hoveredPointId ?? ""], "pin-light",
+                  ["==", ["id"], selectedPoint?.id ?? ""], "pin-light",
+                  "pin-dark"
+                ],
+                "icon-size": 0.69,
+                "icon-offset": [0, -25],
+                "symbol-sort-key": [
+                  "case",
+                  ["==", ["id"], hoveredPointId ?? ""], 2,
+                  ["==", ["id"], selectedPoint?.id ?? ""], 1,
+                  0
+                ]
+              }}
+            />
+          ) : (
+            <Layer type="circle" id="data-point"
+              layout={{
+                "circle-sort-key": [
+                  "case",
+                  ["==", ["id"], hoveredPointId ?? ""], 2,
+                  ["==", ["id"], selectedPoint?.id ?? ""], 1,
+                  0
+                ]
+              }}
+              paint={{
+                "circle-radius": 5,
+                "circle-color": [
+                  "case",
+                  ["==", ["id"], hoveredPointId ?? ""], "#64748b",
+                  ["==", ["id"], selectedPoint?.id ?? ""], "#64748b",
+                  "#020617"
+                ]                    
+              }}
+            />
+          )}  
         </Source>
       )}
       {data && selectedPoint && (
@@ -149,7 +132,7 @@ export default function Map({ data, mapLoaded, mapError, onLoad, onError }: MapP
             "right": [-14, -23],
             "bottom-left": [0, -36],
             "bottom-right": [0, -36],
-          } : 4}
+          } as Offset: 4}
         >
           <h2 className="font-bold text-slate-700 text-center">
             Properties
