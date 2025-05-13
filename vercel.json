@@ -2,10 +2,7 @@
   "crons": [
     {
       "path": "/api/cron",
-      "schedule": "0 0 * * *",
-      "headers": {
-        "x-vercel-cron-secret": "@geoapify_cron_secret"
-      }
+      "schedule": "0 0 * * *"
     }
   ]
 }
