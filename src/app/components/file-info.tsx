@@ -3,12 +3,17 @@ interface FileInfoProps {
   numFeatures: number | undefined
   filename: string
   error: string
+  loading: boolean
 }
 
-export default function FileInfo({ hasData, numFeatures, filename, error }: FileInfoProps) {
+export default function FileInfo({ hasData, numFeatures, filename, error, loading }: FileInfoProps) {
   return (
     <div className="py-4">
-      {error ? (
+      {loading ? (
+        <p className="font-light text-xl text-center">
+          Mapping...
+        </p>
+      ) : error ? (
         <>
           <p className="font-light text-xl text-center">
             Failed to import data from &quot;{filename}&quot;

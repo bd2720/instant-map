@@ -18,16 +18,17 @@ interface SidebarProps {
   handleFile: (file: File) => void
   clearFile: () => void
   disableFileInput: boolean
+  loading: boolean
 }
 
-export default function Sidebar({ hasData, numFeatures, filename, fileFormat, setFileFormat, useAddress, setUseAddress, error, handleFile, clearFile, disableFileInput }: SidebarProps){
+export default function Sidebar({ hasData, numFeatures, filename, fileFormat, setFileFormat, useAddress, setUseAddress, error, handleFile, clearFile, disableFileInput, loading }: SidebarProps){
   const showGeometries = (fileFormat === 'csv' || fileFormat === 'json');
   return (
     <div className="bg-slate-400 h-full p-4 overflow-hidden">
       <FileFormats fileFormat={fileFormat} setFileFormat={setFileFormat} />
       <Geometries disabled={!showGeometries} useAddress={(showGeometries) ? useAddress : false} setUseAddress={setUseAddress} />
       <FileInput fileFormat={fileFormat} disabled={disableFileInput} handleFile={handleFile} clearFile={clearFile} />
-      <FileInfo hasData={hasData} numFeatures={numFeatures} filename={filename} error={error} />
+      <FileInfo hasData={hasData} numFeatures={numFeatures} filename={filename} error={error} loading={loading} />
     </div>
   );
 }

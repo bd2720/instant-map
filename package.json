@@ -9,7 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@mapbox/mbtiles": "^0.12.1",
     "@upstash/ratelimit": "^2.0.5",
     "@upstash/redis": "^1.34.8",
     "maplibre-gl": "^5.5.0",

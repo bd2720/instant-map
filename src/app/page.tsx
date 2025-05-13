@@ -83,11 +83,13 @@ export default function Home() {
   const [useAddress, setUseAddress] = useState(false);
   const [mapLoaded, setMapLoaded] = useState(false);
   const [mapError, setMapError] = useState<string>("");
+  const [loading, setLoading] = useState(false);
 
   // handle file upload (parse as GeoJSON)
   async function handleFile(file: File){
     if(!file) throw new Error("File is undefined.");
     setFilename(file.name);
+    setLoading(true);
     try {
       // convert based on format
       const data = await converterMap[fileFormat](file, useAddress);
@@ -95,9 +97,11 @@ export default function Home() {
       if(!data) throw new Error("Unrecognized file format.");
       setGeojsonData(data);
       setError("");
+      setLoading(false);
     } catch(err: unknown){
       console.error(`Error while parsing file "${file.name}":`, err);
       setGeojsonData(null);
+      setLoading(false);
       // construct error string
       if(err instanceof Error){
         if(err instanceof ZodError){
@@ -121,6 +125,7 @@ export default function Home() {
     setGeojsonData(null);
     setFilename("");
     setError("");
+    setLoading(false);
   }
 
   return (
@@ -148,7 +153,8 @@ export default function Home() {
             error={error}
             handleFile={handleFile}
             clearFile={handleReset}
-            disableFileInput={!mapLoaded || mapError.length > 0}
+            disableFileInput={!mapLoaded || mapError.length > 0 || loading}
+            loading={loading}
           />
         </div>
       </main>

@@ -42,3 +42,6 @@ next-env.d.ts
 
 # JS scripts to generate sample data
 /scripts
+
+# old api routes for Mapbox
+/old_api

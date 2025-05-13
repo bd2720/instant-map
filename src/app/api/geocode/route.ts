@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { limits } from "@/app/redis/limits";
+import { limits, secLimit } from "@/app/redis/limits";
 
 const GEOCODER_BASE = 'https://api.geoapify.com';
 const GEOCODER_TOKEN = process.env.GEOAPIFY_TOKEN;
@@ -19,7 +19,13 @@ export async function GET(req: NextRequest){
     return new Response('Incorrect search parameters', { status: 400 });
   }
 
-  // use Redis to test and set limit
+  // check API rate limit (per second)
+  const { success } = await secLimit.limit('geoapify-limit-sec');
+  if(!success){
+    return new Response('Rate limit exceeded', { status: 429, headers: { 'Retry-After': '1000' } });
+  }
+
+  // use Redis to test and set API call limit (per day)
   const limitResponse = await limits('canRequestGeocoding', 'geocodingRequests');
   if(limitResponse !== null) return limitResponse;
 
