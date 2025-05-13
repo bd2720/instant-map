@@ -1,66 +1,78 @@
 import { JSONAddresses, GeoJSONSchema } from "./validate";
 
-// use map-proxy
-const geocoder = `${process.env.NEXT_PUBLIC_URL}/api/map-proxy/search/geocode/v6/batch`;
-const GEOCODER_LIMIT = 100;
+const GEOCODER_LIMIT = 20;
+const DELAY = 1000; // ms
+
+const geocoder = `/api/geocode`;
 
 // define the API return type
 interface GeocoderResult {
-  batch: GeoJSONSchema[]
+  results?: [
+    {
+      lon?: number
+      lat?: number
+    }
+  ]
 }
 
 /** Geocodes a JSON object with addresses into longitude/latitude */
 export async function geocode(addresses: JSONAddresses): Promise<GeoJSONSchema> {
+  console.log('batch in:', addresses);
   // verify limit
   if(addresses.length > GEOCODER_LIMIT) {
-    throw new Error(`Geocoding error: too many addresses (limit ${GEOCODER_LIMIT}, received ${addresses.length})`);
+    throw new Error(`Too many addresses (limit ${GEOCODER_LIMIT}, received ${addresses.length})`);
   }
 
-  // use batch geocoding
-  const apiBatch = addresses.map(a => ({
-    types: ["address"], // want an address
-    limit: 1, // limit number of results per address
-    q: a.address
-  }));
-  console.log('batch in:', apiBatch);
-  const geocodePromise: Promise<GeocoderResult> = new Promise((resolve, reject) => {
-    fetch(geocoder, {
-      method: "POST",
-      body: JSON.stringify(apiBatch),
-    })
-      .then(async res => {
-        if(!res.ok){ // API limit errors are caught here
-          const errorText = await res.text();
-          throw new Error(`${errorText}`);
-        }
-        return res.json();
-      })
-      .then(json => {
-        resolve(json);
-      })
-      .catch(err => {
-        reject(err);
-      });
+  // create request fn for each address
+  const requests = addresses.map((a, i) => {
+    const address = a.address;
+    return async () => {
+      const res = await fetch(`${geocoder}?text=${encodeURIComponent(address)}`)
+      if(!res.ok){
+        throw new Error(`Geocoding failed for address ${i+1} (${address}): ${res.statusText}`)
+      }
+      const data: GeocoderResult = await res.json();
+      
+      if(data.results?.length){
+        return data.results[0];
+      } else {
+        throw new Error(`Geocoding failed for address ${i+1}: ${address} (Address Not Found)`)
+      }
+    }
   });
-  const { batch } = await geocodePromise;
+  // execute each request with a delay
+  let batch = []
+  for(let i = 0; i < requests.length; i++){
+    let req = requests[i];
+    let [ _, res ] = await Promise.all([
+      new Promise(delayRes => setTimeout(delayRes, DELAY)),
+      req(),
+    ])
+    batch.push(res);
+  }
+
   console.log('batch out:', batch);
-  // results are a list of featurecollections; must map to just one
-  const features = batch.map(result => result.features[0] ?? null);
-  // insert properties from original object
-  features.forEach((f, i) => {
-    // error if the feature is null
-    if(f === null){
+  // map each location object to a feature
+  const features = batch.map((result, i) => {
+    // ensure coords are defined (address is valid)
+    if(result.lon === undefined || result.lat === undefined){
       throw new Error(`Failed to geocode address ${i+1}. Please verify street address and try again.`);
     }
-    const {address, ...properties} = addresses[i];
-    f.properties = {
-      address: address,
-      ...properties
+    // construct GeoJSON Feature
+    return {
+      type: "Feature" as const,
+      geometry: {
+        type: "Point" as const,
+        coordinates: [result.lon, result.lat] as [number, number],
+      },
+      properties: {
+        ...addresses[i] // get properties from original address object
+      }
     }
   });
-
+  // construct and return final GeoJSON object
   return {
     type: "FeatureCollection" as const,
-    features: features
+    features: features,
   };
 }

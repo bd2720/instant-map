@@ -1,7 +1,4 @@
-import { Redis } from '@upstash/redis';
-
-// connect to redis from env vars
-const redis = Redis.fromEnv();
+import { redis } from './connect';
 
 export async function limits(enabledKey: string, limitKey: string, amount: number = 1){
   // ensure enabled and limit is not exceeded
