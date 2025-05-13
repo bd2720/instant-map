@@ -47,10 +47,10 @@ export async function geocode(addresses: JSONAddresses): Promise<GeoJSONSchema> 
     }
   });
   // execute each request with a delay
-  let batch = [];
+  const batch = [];
   for(let i = 0; i < requests.length; i++){
     const geocodingRequest = requests[i];
-    let results = await Promise.all([
+    const results = await Promise.all([
       new Promise(delayRes => setTimeout(delayRes, MIN_DELAY)),
       geocodingRequest(),
     ])
