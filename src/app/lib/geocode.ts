@@ -35,14 +35,14 @@ export async function geocode(addresses: JSONAddresses): Promise<GeoJSONSchema> 
       const res = await fetch(`${geocoder}?text=${encodeURIComponent(address)}`)
       if(!res.ok){
         const errorText = await res.text() || res.statusText;
-        throw new Error(`Geocoding failed for address ${i+1} (${address}): ${errorText}`);
+        throw new Error(`Geocoding failed for address ${i+1}: ${errorText}`);
       }
       const data: GeocoderResult = await res.json();
       
       if(data.results.length){
         return data.results[0];
       } else {
-        throw new Error(`Failed to geocode address ${i+1}: ${address} (Address Not Found)`)
+        throw new Error(`Failed to geocode address ${i+1}: Address Not Found`)
       }
     }
   });

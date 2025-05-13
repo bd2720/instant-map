@@ -68,13 +68,19 @@ export default function Map({ data, mapLoaded, mapError, onLoad, onError }: MapP
         latitude: 41.102,
         zoom: 8.5,
       }}
+      maxPitch={0}
+      cooperativeGestures={true}
+      hash
+      attributionControl={{
+        compact: true,
+        customAttribution: "Geocoding by Geoapify"
+      }}
       interactiveLayerIds={["data-pin", "data-point"]}
       cursor={(hoveredPointId !== undefined) ? 'pointer' : undefined}
       onLoad={onLoad}
       onError={onError}
       onMouseMove={handleMouseMove}
       onMouseDown={handleMouseDown}
-      hash
     >
       {data && imagesLoaded && (
         <Source type="geojson" data={data} generateId key={renderPins ? "symbol-source" : "circle-source"}>

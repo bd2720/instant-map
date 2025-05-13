@@ -131,8 +131,8 @@ export default function Home() {
   return (
     <div className="h-screen flex flex-col">
       <Header />
-      <main className="flex flex-1">
-        <div className="w-[80%] h-full">
+      <main className="flex flex-1 flex-col md:flex-row">
+        <div className="w-full h-[600px] md:w-[80%] md:h-full">
           <Map 
             data={geojsonData}
             mapLoaded={mapLoaded}
@@ -141,7 +141,7 @@ export default function Home() {
             onError={(e) => setMapError(e.error.message)}
           />
         </div>
-        <div className="w-[20%] h-full">
+        <div className="w-full h-[600px] md:w-[20%] md:h-full">
           <Sidebar 
             hasData={!!geojsonData} 
             numFeatures={geojsonData?.features.length} 
