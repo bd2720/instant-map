@@ -9,7 +9,7 @@ export default function Home() {
         <p className="mb-4">
           Instant Map is an online mapping tool capable of transforming data of various formats into an interactive map feature.
           Upload a dataset with location attributes to create an <span className="font-thin italic text-slate-100">instant visualization</span> of your data,
-          including interactive map markers that display each location's specific attribute values when clicked.
+          including interactive map markers that display each location&apos;s specific attribute values when clicked.
           Currently, three file formats and two geospatial representations are supported, allowing traditionally non-geospatial file formats to be mapped.
           Instant Map is a free demonstration of a service that can benefit data analysts, map makers, small business owners, or anyone who
           needs a complete solution that geocodes, converts, and maps data <span className="font-thin italic text-slate-100">all with a single click.</span>
@@ -47,11 +47,11 @@ export default function Home() {
         </ol>
         <h2 className="text-3xl text-slate-200 font-semibold mb-2">Map Interactions</h2>
         <p>
-          The map can be panned, zoomed and rotated using keyboard/mouse or touch controls.
+          The map can be panned, zoomed, and rotated using keyboard/mouse or touch controls.
           The navigation control buttons at the top right will also zoom and rotate the map.
           Once data is imported onto the map, you will see dark markers for each item in your dataset at the correct location.
           Use the controls at the top left to toggle the icon type between pins and dots.
-          Click on a marker to open a popup window displaying the marker's properties.
+          Click on a marker to open a popup window displaying the marker&apos;s properties.
           These correspond to the original fields or columns of the associated item in your dataset.
         </p>
       </main>
