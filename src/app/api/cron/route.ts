@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 import { redis } from "@/app/redis/connect";
 
 // Geoapify's daily free limit
-const GEOAPIFY_LIMIT_DAY = process.env.GEOAPIFY_LIMIT_DAY ?? 3000;
+const GEOAPIFY_LIMIT_DAY = Number(process.env.GEOAPIFY_LIMIT_DAY) ?? 3000;
 // auth secret
 const CRON_SECRET = process.env.CRON_SECRET ?? null;
 

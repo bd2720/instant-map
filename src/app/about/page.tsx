@@ -1,12 +1,13 @@
 import Header from "../components/header";
+import Link from "../components/link";
 
 export default function Home() {
   return (
     <div className="h-screen">
       <Header/>
-      <main className="text-lg text-slate-400 bg-slate-900 p-4 sm:px-[20%]">
-        <h2 className="text-3xl text-slate-200 font-semibold mb-2">What is Instant Map?</h2>
-        <p className="mb-4">
+      <main className="text-lg text-slate-400 bg-slate-900 p-4 sm:px-[20%] py-8">
+        <h2 className="text-3xl text-slate-200 font-semibold mb-4">What is Instant Map?</h2>
+        <p className="mb-8">
           Instant Map is an online mapping tool capable of transforming data of various formats into an interactive map feature.
           Upload a dataset with location attributes to create an <span className="font-thin italic text-slate-100">instant visualization</span> of your data,
           including interactive map markers that display each location&apos;s specific attribute values when clicked.
@@ -14,12 +15,12 @@ export default function Home() {
           Instant Map is a free demonstration of a service that can benefit data analysts, map makers, small business owners, or anyone who
           needs a complete solution that geocodes, converts, and maps data <span className="font-thin italic text-slate-100">all with a single click.</span>
         </p>
-        <h2 className="text-3xl text-slate-200 font-semibold mb-2">How Does It Work?</h2>
-        <ol className="list-decimal ml-12">
+        <h2 className="text-3xl text-slate-200 font-semibold mb-4">How Do I Upload Data?</h2>
+        <ol className="list-decimal ml-12 mb-8">
           <li className="mb-2">
             <h3 className="text-slate-200 font-semibold">Select the file format of your data:</h3>
             <ul className="list-disc ml-12 text-slate-200 font-thin">
-              <li>CSV (must be comma-delineated)</li>
+              <li>CSV (must be comma-delimited)</li>
               <li>JSON</li>
               <li>GeoJSON (recommended)</li>
             </ul>
@@ -45,14 +46,60 @@ export default function Home() {
             <h3 className="text-slate-200 font-semibold">Click <span className="text-slate-200 font-thin">Upload</span> and watch your custom map feature take shape!</h3>
           </li>
         </ol>
-        <h2 className="text-3xl text-slate-200 font-semibold mb-2">Map Interactions</h2>
-        <p>
+        <h2 className="text-3xl text-slate-200 font-semibold mb-4">Map Interactions</h2>
+        <p className="mb-8">
           The map can be panned, zoomed, and rotated using keyboard/mouse or touch controls.
           The navigation control buttons at the top right will also zoom and rotate the map.
           Once data is imported onto the map, you will see dark markers for each item in your dataset at the correct location.
           Use the controls at the top left to toggle the icon type between pins and dots.
           Click on a marker to open a popup window displaying the marker&apos;s properties.
           These correspond to the original fields or columns of the associated item in your dataset.
+          Moving the map will update the URL&apos;s path according to zoom level, longitude, and latitude, in that order.
+        </p>
+        <h2 className="text-3xl text-slate-200 font-semibold mb-2">Tech Stack</h2>
+        <p className="mb-8">
+          Instant Map is currently built on software that is either completely free or offers a free plan. 
+          The frontend uses React and Tailwind CSS. 
+          The frontend and backend are both provided through Next.js and written in TypeScript.
+          The map library used is <Link href="https://maplibre.org/" newTab>MapLibre</Link>, an open-source fork of Mapbox.
+          Map tiles are generously provided by <Link href="https://openfreemap.org/" newTab>OpenFreeMap</Link>, a free, open-source map tile provider.
+          The geocoding API (converts addresses to coordinates) is powered by the <Link href="https://www.geoapify.com/" newTab>Geoapify</Link> free plan.
+          Upstash for Redis is used to assist with rate limiting the geocoding API and tracking daily use limits.
+          Deployment, environment variables, and a cron job that resets the daily geocoding limit are managed through Vercel.
+          Instant Map is open-source, and its <Link href="https://github.com/bd2720/instant-map" title="View source code on GitHub" newTab>source code</Link> is available on GitHub.
+          Please feel free to fork the project to make changes, and do not hesitate to raise an issue if unexplained bugs or errors occur.
+        </p>
+        <h2 className="text-3xl text-slate-200 font-semibold mb-2">Why Not Mapbox?</h2>
+        <p className="mb-4">
+          <Link href="https://www.mapbox.com/" newTab>Mapbox</Link> is a business-oriented location platform with high customization and versatility. 
+          It offers access to a map library, geocoding API, and more through a pay-as-you-go pricing system.
+          Instant Map originally used Mapbox, both for the map feature and geocoding service.
+          Using Mapbox, geocoding was quicker, cheaper, and could comfortably support many more addresses at a time.
+          Their map library also provided useful shortcut features, such as SDF icons.
+          For now, Instant Map has been migrated to free Mapbox alternatives due to issues with Mapbox&apos;s terms of service.
+        </p>
+        <p className="mb-4">
+          Instant Map originally intended to use a proxy server to handle requests generated by the Mapbox map and geocoding.
+          One of the security measures this proxy server offered is being able to hide the Mapbox access token required to call Mapbox APIs.
+          A valid access token must be included in all Mapbox API calls, but this unfortunately introduces a vulnerability.
+          Calling a Mapbox API from the frontend with an access token exposes that token to the frontend users.
+          On any site that directly calls Mapbox API, malicious users can extract the public access token from the Network tab of developer tools,
+          using it to make their own API calls from a REST client like Postman.
+        </p>
+        <p className="mb-4">
+          Putting the Mapbox access token in the frontend is extremely detrimental to Mapbox&apos;s customers for the following reasons:
+          Mapbox forbids the restriction of certain paid services on a token, for example, geocoding. 
+          This means users can make unchecked amounts of API calls, which can eventually rack up unwanted charges.
+          Mapbox does not support custom rate limiting either.
+          Specifically, Mapbox does not offer developers any method of restricting a token to be used a certain amount of times,
+          a common-sense feature that would allow smart developers to put a hard cap on the amount of money spent within each billing period.
+        </p>
+        <p className="mb-8">
+          Instant Map initially solved this problem by proxying Mapbox APIs in order to enforce custom rate limiting, ensuring Mapbox API calls would remain within initial free limits.
+          For example, if Mapbox allows 50000 free monthly map instantiations before the next ones become paid, then a proxy could cap the number of calls made at 50000 to guarantee free usage.
+          Frustratingly, Mapbox prevents proxying any of their APIs in their terms of service, even if the sole reason is to hide the token or to set up rate limiting to prevent overuse.
+          Through these restrictions, Mapbox prevents developers from mitigating their pay-as-you-go pricing in any way, even if every API call is accounted for;
+          as a consequence, Instant Map has since migrated to alternate services that can be used freely within their respective terms and conditions.
         </p>
       </main>
     </div>
