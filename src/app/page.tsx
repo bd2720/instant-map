@@ -1,17 +1,16 @@
 "use client";
 
 import { useState } from 'react';
-import Header from './components/header';
 import Map from './components/map';
 import Sidebar from './components/sidebar';
 import { FeatureCollection, Point } from 'geojson';
 import { validateJsonCoord, validateJsonAddr, validateGeojson } from './lib/validate';
 import { convertJson } from './lib/convert';
+import { geocode } from './lib/geocode';
 import { ZodError } from 'zod';
 import { parse, ParseResult } from 'papaparse';
-import { geocode } from './lib/geocode';
 
-export type FileFormat = "csv" | "json" | "geojson" | "sample";
+export type FileFormat = "csv" | "json" | "xml" | "geojson" | "sample";
 
 // validates, geocodes and/or parses object to GeoJSON
 function parsedToGeojson(data: object[], useAddress: boolean){
@@ -59,6 +58,12 @@ async function fromJSON(file: File, useAddress: boolean){
 
 }
 
+async function fromXML(file: File, useAddress: boolean){
+  // to string
+  const text = await file.text();
+  // to JSON (TODO)
+}
+
 async function fromGeoJSON(file: File){
   // to string
   const text = await file.text();
@@ -70,7 +75,8 @@ async function fromGeoJSON(file: File){
 
 const converterMap = {
   'csv': fromCSV, 
-  'json': fromJSON, 
+  'json': fromJSON,
+  'xml': fromXML,
   'geojson': fromGeoJSON,
   'sample': fromGeoJSON
 }
@@ -94,7 +100,7 @@ export default function Home() {
       // convert based on format
       const data = await converterMap[fileFormat](file, useAddress);
       // update state
-      if(!data) throw new Error("Unrecognized file format.");
+      if(!data) throw new Error("The selected file format is not yet supported.");
       setGeojsonData(data);
       setError("");
       setLoading(false);
@@ -129,35 +135,32 @@ export default function Home() {
   }
 
   return (
-    <div className="h-screen flex flex-col">
-      <Header />
-      <main className="flex flex-1 flex-col md:flex-row">
-        <div className="w-full h-[600px] md:w-[80%] md:h-full">
-          <Map 
-            data={geojsonData}
-            mapLoaded={mapLoaded}
-            mapError={mapError}
-            onLoad={() => setMapLoaded(true)}
-            onError={(e) => setMapError(e.error.message)}
-          />
-        </div>
-        <div className="w-full h-[600px] md:w-[20%] md:h-full">
-          <Sidebar 
-            hasData={!!geojsonData} 
-            numFeatures={geojsonData?.features.length} 
-            filename={filename}
-            fileFormat={fileFormat}
-            setFileFormat={setFileFormat}
-            useAddress={useAddress}
-            setUseAddress={setUseAddress}
-            error={error}
-            handleFile={handleFile}
-            clearFile={handleReset}
-            disableFileInput={!mapLoaded || mapError.length > 0 || loading}
-            loading={loading}
-          />
-        </div>
-      </main>
-    </div>
+    <main className="flex flex-1 flex-col md:flex-row">
+      <div className="w-full h-[600px] md:w-[80%] md:h-full">
+        <Map 
+          data={geojsonData}
+          mapLoaded={mapLoaded}
+          mapError={mapError}
+          onLoad={() => setMapLoaded(true)}
+          onError={(e) => setMapError(e.error.message)}
+        />
+      </div>
+      <div className="w-full md:h-[600px] md:w-[20%] md:h-full">
+        <Sidebar 
+          hasData={!!geojsonData} 
+          numFeatures={geojsonData?.features.length} 
+          filename={filename}
+          fileFormat={fileFormat}
+          setFileFormat={setFileFormat}
+          useAddress={useAddress}
+          setUseAddress={setUseAddress}
+          error={error}
+          handleFile={handleFile}
+          clearFile={handleReset}
+          disableFileInput={!mapLoaded || mapError.length > 0 || loading}
+          loading={loading}
+        />
+      </div>
+    </main>
   );
 }

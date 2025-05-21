@@ -6,6 +6,7 @@ const formats: {
 }[] = [
   {id: "csv", name: "CSV"},
   {id: "json", name: "JSON"},
+  {id: "xml", name: "XML"},
   {id: "geojson", name: "GeoJSON"},
   {id: "sample", name: "Sample"},
 ];

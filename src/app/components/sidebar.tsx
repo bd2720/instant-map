@@ -22,7 +22,7 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ hasData, numFeatures, filename, fileFormat, setFileFormat, useAddress, setUseAddress, error, handleFile, clearFile, disableFileInput, loading }: SidebarProps){
-  const showGeometries = (fileFormat === 'csv' || fileFormat === 'json');
+  const showGeometries = fileFormat !== 'geojson' && fileFormat !== 'sample';
   return (
     <div className="bg-slate-400 h-full p-4 overflow-hidden">
       <FileFormats fileFormat={fileFormat} setFileFormat={setFileFormat} />

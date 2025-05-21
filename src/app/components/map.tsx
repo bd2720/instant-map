@@ -43,7 +43,7 @@ export default function Map({ data, mapLoaded, mapError, onLoad, onError }: MapP
     if(!e.features?.length) return;
     // update selected point
     const clickedPoint = e.features[0] as Feature<Point>;
-    setSelectedPoint((clickedPoint.id !== selectedPoint?.id) ? clickedPoint : undefined);
+    setSelectedPoint(clickedPoint);
   }
 
   // render error message on map error
