@@ -1,4 +1,3 @@
-import Header from "../components/header";
 import Link from "../components/link";
 
 export default function Home() {
@@ -7,23 +6,27 @@ export default function Home() {
       <h2 className="text-3xl text-slate-200 font-semibold mb-4">What is Instant Map?</h2>
       <p className="mb-8">
         Instant Map is an online mapping tool capable of transforming data of various formats into an interactive map feature.
-        Upload a dataset with location attributes to create an <span className="italic text-slate-100">instant visualization</span> of your data,
+        Upload a dataset with location attributes to create an <span className="font-semibold italic text-slate-100">instant visualization</span> of your data,
         including interactive map markers that display each location&apos;s specific attribute values when clicked.
-        Currently, three file formats and two geospatial representations are supported, allowing traditionally non-geospatial file formats to be mapped.
+        Currently, four file formats and two geospatial representations are supported, allowing traditionally non-geospatial file formats to be mapped.
         Instant Map is a free demonstration of a service that can benefit data analysts, map makers, small business owners, or anyone who
-        needs a complete solution that geocodes, converts, and maps data <span className="italic text-slate-100">all with a single click.</span>
+        needs a complete solution that geocodes, converts, and maps data <span className="font-semibold italic text-slate-100">all with a single click.</span>
       </p>
       <h2 className="text-3xl text-slate-200 font-semibold mb-4">How Do I Upload Data?</h2>
       <ol className="list-decimal ml-12 mb-8">
         <li className="mb-2">
           <h3>Select the file format of your data:</h3>
           <ul className="list-disc ml-12">
-            <li>CSV (must be comma-delimited)</li>
+            <li>CSV</li>
             <li>JSON</li>
+            <li>XML</li>
             <li>GeoJSON (recommended)</li>
           </ul>
-          The <span className="text-slate-200">Sample</span> option automatically uploads the <a href="/sample.geojson" title="Download sample.geojson" download className="text-lg font-semibold hover:underline text-slate-200 visited:text-slate-400">sample GeoJSON file (15KB)</a>.
+          CSV format must use the comma as a delimiter; fields whose values contain commas must be enclosed in double quotes.
+          JSON format should contain an array of objects.
+          XML format should contain one parent element, with each dataset item represented by a child element; each dataset item&apos;s keys and values must be encoded using attributes.
           GeoJSON format is recommended due to its exclusive use of coordinates and default compatibility with mapping software.
+          The Sample option automatically uploads the <a href="/sample.geojson" title="Download sample.geojson" download className="text-lg font-semibold hover:underline text-slate-200 visited:text-slate-400">sample GeoJSON file (15KB)</a>.
         </li>
         <li className="mb-2">
         <h3>Select the geographic representation present in your data:</h3>
@@ -33,15 +36,15 @@ export default function Home() {
           </ul>
           To use Instant Map, each item in your dataset must contain either coordinates (latitude/longitude) or a complete street address.
           Each address must be an accurate, complete street address.
-          The address must be located in a field or column at the top level of your data and must be titled <span className="font-weighted text-slate-200">address</span>.
+          The address must be located in a field or column at the top level of your data and must be titled <span className="text-slate-100 italic">address</span>.
           Each pair of coordinates must consist of two decimals: latitude (-90 to 90) and longitude (-180 to 180).
-          These fields must exist for each item at the top level of your dataset and must be titled <span className="font-weighted text-slate-200">latitude</span> and <span className="font-weighted text-slate-200">longitude</span> respectively.
+          These fields must exist for each item at the top level of your dataset and must be titled <span className="text-slate-100 italic">latitude</span> and <span className="text-slate-100 italic">longitude</span> respectively.
           Because of the limitations in speed and capacity of the free geocoding service used, the address option supports a maximum of 20 items per dataset.
           If your dataset contains both types of representation, select coordinates.
           Coordinates are always recommended, as they are cheaper and quicker to map.
         </li>
         <li className="mb-2">
-          <h3>Click <span className="text-slate-200 font-thin">Upload</span> and watch your custom map feature take shape!</h3>
+          <h3>Click <span className="text-slate-200 font-semibold">Upload</span> and watch your custom map feature take shape!</h3>
         </li>
       </ol>
       <h2 className="text-3xl text-slate-200 font-semibold mb-4">Map Interactions</h2>

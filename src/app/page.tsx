@@ -7,8 +7,10 @@ import { FeatureCollection, Point } from 'geojson';
 import { validateJsonCoord, validateJsonAddr, validateGeojson } from './lib/validate';
 import { convertJson } from './lib/convert';
 import { geocode } from './lib/geocode';
+import { formatParsedXML } from './lib/format';
 import { ZodError } from 'zod';
 import { parse, ParseResult } from 'papaparse';
+import xmlConverter from 'xml-js';
 
 export type FileFormat = "csv" | "json" | "xml" | "geojson" | "sample";
 
@@ -55,13 +57,16 @@ async function fromJSON(file: File, useAddress: boolean){
   // to JSON
   const json = JSON.parse(text);
   return parsedToGeojson(json, useAddress);
-
 }
 
 async function fromXML(file: File, useAddress: boolean){
   // to string
   const text = await file.text();
-  // to JSON (TODO)
+  // to JSON (xml-js)
+  const json = xmlConverter.xml2js(text, { compact: false }) as xmlConverter.Element;
+  // format XML parser result object to standard JSOn
+  const formattedJson = formatParsedXML(json);
+  return parsedToGeojson(formattedJson, useAddress);
 }
 
 async function fromGeoJSON(file: File){
