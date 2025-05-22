@@ -11,8 +11,9 @@ import { formatParsedXML } from './lib/format';
 import { ZodError } from 'zod';
 import { parse, ParseResult } from 'papaparse';
 import xmlConverter from 'xml-js';
+import XLSX from 'xlsx';
 
-export type FileFormat = "csv" | "json" | "xml" | "geojson" | "sample";
+export type FileFormat = "csv" | "xml" | "xlsx" | "json" | "geojson" | "sample";
 
 // validates, geocodes and/or parses object to GeoJSON
 function parsedToGeojson(data: object[], useAddress: boolean){
@@ -51,12 +52,16 @@ async function fromCSV(file: File, useAddress: boolean){
   return parsedToGeojson(data, useAddress);
 }
 
-async function fromJSON(file: File, useAddress: boolean){
-  // to string
-  const text = await file.text();
-  // to JSON
-  const json = JSON.parse(text);
-  return parsedToGeojson(json, useAddress);
+async function fromXLSX(file: File, useAddress: boolean){
+  // convert to arraybuffer
+  const fileBuf = await file.arrayBuffer();
+  // get Excel workbook (SheetJS)
+  const workbook = XLSX.read(fileBuf);
+  // get first worksheet
+  const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+  // convert to json
+  const data: object[] = XLSX.utils.sheet_to_json(worksheet);
+  return parsedToGeojson(data, useAddress);
 }
 
 async function fromXML(file: File, useAddress: boolean){
@@ -69,6 +74,14 @@ async function fromXML(file: File, useAddress: boolean){
   return parsedToGeojson(formattedJson, useAddress);
 }
 
+async function fromJSON(file: File, useAddress: boolean){
+  // to string
+  const text = await file.text();
+  // to JSON
+  const json = JSON.parse(text);
+  return parsedToGeojson(json, useAddress);
+}
+
 async function fromGeoJSON(file: File){
   // to string
   const text = await file.text();
@@ -79,11 +92,12 @@ async function fromGeoJSON(file: File){
 }
 
 const converterMap = {
-  'csv': fromCSV, 
-  'json': fromJSON,
+  'csv': fromCSV,
+  'xlsx': fromXLSX, 
   'xml': fromXML,
+  'json': fromJSON,
   'geojson': fromGeoJSON,
-  'sample': fromGeoJSON
+  'sample': fromGeoJSON,
 }
 
 export default function Home() {
@@ -160,10 +174,13 @@ export default function Home() {
           useAddress={useAddress}
           setUseAddress={setUseAddress}
           error={error}
+          setError={setError}
           handleFile={handleFile}
           clearFile={handleReset}
           disableFileInput={!mapLoaded || mapError.length > 0 || loading}
           loading={loading}
+          setLoading={setLoading}
+          setFilename={setFilename}
         />
       </div>
     </main>

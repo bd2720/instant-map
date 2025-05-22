@@ -5,10 +5,10 @@ export default function Home() {
     <main className="text-lg text-slate-400 bg-slate-900 p-4 sm:px-[20%] py-8">
       <h2 className="text-3xl text-slate-200 font-semibold mb-4">What is Instant Map?</h2>
       <p className="mb-8">
-        Instant Map is an online mapping tool capable of transforming data of various formats into an interactive map feature.
+        <Link href="/" title="Home Page">Instant Map</Link> is an online mapping tool capable of transforming data of various formats into an interactive map feature.
         Upload a dataset with location attributes to create an <span className="font-semibold italic text-slate-100">instant visualization</span> of your data,
         including interactive map markers that display each location&apos;s specific attribute values when clicked.
-        Currently, four file formats and two geospatial representations are supported, allowing traditionally non-geospatial file formats to be mapped.
+        Currently, five file formats and two geospatial representations are supported, allowing traditionally non-geospatial file formats to be mapped.
         Instant Map is a free demonstration of a service that can benefit data analysts, map makers, small business owners, or anyone who
         needs a complete solution that geocodes, converts, and maps data <span className="font-semibold italic text-slate-100">all with a single click.</span>
       </p>
@@ -18,13 +18,16 @@ export default function Home() {
           <h3>Select the file format of your data:</h3>
           <ul className="list-disc ml-12">
             <li>CSV</li>
-            <li>JSON</li>
+            <li>XLSX</li>
             <li>XML</li>
+            <li>JSON</li>
             <li>GeoJSON (recommended)</li>
+            <li>Sample</li>
           </ul>
           CSV format must use the comma as a delimiter; fields whose values contain commas must be enclosed in double quotes.
-          JSON format should contain an array of objects.
+          XLSX format will map data from only the first worksheet.
           XML format should contain one parent element, with each dataset item represented by a child element; each dataset item&apos;s keys and values must be encoded using attributes.
+          JSON format should contain an array of objects.
           GeoJSON format is recommended due to its exclusive use of coordinates and default compatibility with mapping software.
           The Sample option automatically uploads the <a href="/sample.geojson" title="Download sample.geojson" download className="text-lg font-semibold hover:underline text-slate-200 visited:text-slate-400">sample GeoJSON file (15KB)</a>.
         </li>
@@ -35,10 +38,10 @@ export default function Home() {
             <li>Coordinates (recommended)</li>
           </ul>
           To use Instant Map, each item in your dataset must contain either coordinates (latitude/longitude) or a complete street address.
-          Each address must be an accurate, complete street address.
-          The address must be located in a field or column at the top level of your data and must be titled <span className="text-slate-100 italic">address</span>.
-          Each pair of coordinates must consist of two decimals: latitude (-90 to 90) and longitude (-180 to 180).
-          These fields must exist for each item at the top level of your dataset and must be titled <span className="text-slate-100 italic">latitude</span> and <span className="text-slate-100 italic">longitude</span> respectively.
+          To use addresses, each must be an accurate, complete street address.
+          The address must be located in a field or column at the top level of each item in your dataset and must be titled <span className="text-slate-100 italic">address</span>.
+          To use coordinates, each pair must consist of two decimals: latitude (-90 to 90) and longitude (-180 to 180).
+          These fields must exist for each item at the top level of each item in your dataset and must be titled <span className="text-slate-100 italic">latitude</span> and <span className="text-slate-100 italic">longitude</span> respectively.
           Because of the limitations in speed and capacity of the free geocoding service used, the address option supports a maximum of 20 items per dataset.
           If your dataset contains both types of representation, select coordinates.
           Coordinates are always recommended, as they are cheaper and quicker to map.
@@ -62,6 +65,7 @@ export default function Home() {
         Instant Map is currently built on software that is either completely free or offers a free plan. 
         The frontend uses React and Tailwind CSS. 
         The frontend and backend are both provided through Next.js and written in TypeScript.
+        Validation and parsing are assisted by the Zod, Papa Parse, SheetJS, and xml-js libraries.
         The map library used is <Link href="https://maplibre.org/" newTab>MapLibre</Link>, an open-source fork of Mapbox.
         Map tiles are generously provided by <Link href="https://openfreemap.org/" newTab>OpenFreeMap</Link>, a free, open-source map tile provider.
         The geocoding API (converts addresses to coordinates) is powered by the <Link href="https://www.geoapify.com/" newTab>Geoapify</Link> free plan.
@@ -97,10 +101,10 @@ export default function Home() {
       </p>
       <p className="mb-8">
         Instant Map initially solved this problem by proxying Mapbox APIs in order to enforce custom rate limiting, ensuring Mapbox API calls would remain within initial free limits.
-        For example, if Mapbox allows 50000 free monthly map instantiations before the next ones become paid, then a proxy could cap the number of calls made at 50000 to guarantee free usage.
-        Frustratingly, Mapbox prevents proxying any of their APIs in their terms of service, even if the sole reason is to hide the token or to set up rate limiting to prevent overuse.
+        For example, if Mapbox allows 50,000 free monthly map instantiations before the next ones become paid, then a proxy could cap the number of calls made at 50,000 to guarantee free usage.
+        The problem is that Mapbox prevents proxying any of their APIs in their terms of service, even if the sole reason is to hide the token for security or to set up rate limiting to prevent overuse.
         Through these restrictions, Mapbox prevents developers from mitigating their pay-as-you-go pricing in any way, even if every API call is accounted for;
-        as a consequence, Instant Map has since migrated to alternate services that can be used freely within their respective terms and conditions.
+        as a consequence, Instant Map has since migrated to alternate services that can be used safely and freely within their respective terms and conditions.
       </p>
     </main>
   );

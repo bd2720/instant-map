@@ -22,7 +22,6 @@ interface GeocoderResult {
 
 /** Geocodes a JSON object with addresses into longitude/latitude */
 export async function geocode(addresses: JSONAddresses): Promise<GeoJSONSchema> {
-  console.log('batch in:', addresses);
   // verify limit
   if(addresses.length > MAX_ADDRESSES) {
     throw new Error(`Too many addresses (limit ${MAX_ADDRESSES}, received ${addresses.length})`);
@@ -63,7 +62,6 @@ export async function geocode(addresses: JSONAddresses): Promise<GeoJSONSchema> 
     batch.push(geocodingResult);
   }
 
-  console.log('batch out:', batch);
   // map each location object to a feature
   const features = batch.map((result, i) => {
     // construct GeoJSON Feature

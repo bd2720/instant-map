@@ -64,9 +64,9 @@ export default function Map({ data, mapLoaded, mapError, onLoad, onError }: MapP
       mapStyle="https://tiles.openfreemap.org/styles/positron"
       projection="mercator"
       initialViewState={{
-        longitude: -73.267,
-        latitude: 41.102,
-        zoom: 8.5,
+        longitude: -73,
+        latitude: 41,
+        zoom: 8,
       }}
       maxPitch={0}
       cooperativeGestures={true}

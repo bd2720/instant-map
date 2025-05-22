@@ -5,8 +5,9 @@ const formats: {
   id: FileFormat, name: string
 }[] = [
   {id: "csv", name: "CSV"},
-  {id: "json", name: "JSON"},
+  {id: "xlsx", name: "XLSX"},
   {id: "xml", name: "XML"},
+  {id: "json", name: "JSON"},
   {id: "geojson", name: "GeoJSON"},
   {id: "sample", name: "Sample"},
 ];

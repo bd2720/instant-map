@@ -1,6 +1,6 @@
 import { useRef, type RefObject } from 'react';
 
-export function useSampleData(fileInputRef: RefObject<HTMLInputElement | null>, filename: string){
+export function useSampleData(fileInputRef: RefObject<HTMLInputElement | null>, filename: string, setError: (e: string) => void, setLoading: (l: boolean) => void){
   // ref to abort controller for loading sample file
   const abortControllerRef = useRef<AbortController>(null);
 
@@ -28,7 +28,9 @@ export function useSampleData(fileInputRef: RefObject<HTMLInputElement | null>, 
         abortControllerRef.current = null;
       })
       .catch(err => {
+        setError(err instanceof Error ? err.message : "Error loading sample data.");
         console.error('Error loading sample data:', err);
-      });
+      })
+      .finally(() => setLoading(false))
   }
 }

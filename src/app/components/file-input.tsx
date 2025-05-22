@@ -5,28 +5,35 @@ import Button from './button';
 import { type FileFormat } from '../page';
 import { useSampleData } from '../hooks/useSampleData';
 
+const sampleFilename = 'sample.geojson';
+
 interface FileInputProps {
   fileFormat: FileFormat
   disabled?: boolean
   handleFile: (file: File) => void
   clearFile: () => void
+  setError: (e: string) => void
+  setLoading: (l: boolean) => void
+  setFilename: (f: string) => void
 }
 
-export default function FileInput({ fileFormat, disabled = false, handleFile, clearFile }: FileInputProps){
+export default function FileInput({ fileFormat, disabled = false, handleFile, clearFile, setError, setLoading, setFilename }: FileInputProps){
   // ref to file input HTML element
   const hiddenFileInput = useRef<HTMLInputElement>(null);
 
   // generates handler for loading sample data
-  const handleSample = useSampleData(hiddenFileInput, 'sample.geojson');
+  const handleSample = useSampleData(hiddenFileInput, sampleFilename, setError, setLoading);
 
   // indirectly click the hidden file input button
   function handleClick(){
     // handle sample file
     if(fileFormat === 'sample'){
-      handleSample();
-      return;
+      setFilename(sampleFilename);
+      setLoading(true);
+      handleSample(); // loading will be set to false inside handleSample promises
+    } else {
+      hiddenFileInput.current?.click();
     }
-    hiddenFileInput.current?.click();
   }
 
   // upload file
