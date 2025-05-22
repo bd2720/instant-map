@@ -7,7 +7,7 @@ Transform a list of coordinates or addresses into an interactive map feature in 
 - XLSX
 - XML
 - JSON
-- GeoJSON (coordinates only)
+- GeoJSON
 
 ### Tech Stack
 - *Next.js* - pages and routes
@@ -16,3 +16,5 @@ Transform a list of coordinates or addresses into an interactive map feature in 
 - *Geoapify* - forward geocoding API
 - *Upstash Redis* - quickly storing/updating API limits
 - *Vercel* - deployment, environment variables and cron jobs
+
+### [More Info](https://instant-map.vercel.app/about)  

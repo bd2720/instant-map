@@ -12,6 +12,7 @@ export default function Header(){
             width="96" 
             height="96" 
             className="size-10"
+            priority
           />
           <h1 className="text-4xl font-light">
             Instant Map

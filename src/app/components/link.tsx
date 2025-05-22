@@ -13,7 +13,7 @@ export default function Link({ href, title, newTab = false, children }: LinkProp
       href={href} 
       title={title}
       target={newTab ? "_blank" : undefined}
-      className="text-lg font-semibold hover:underline text-slate-200 visited:text-slate-400"
+      className="text-lg font-semibold hover:underline text-slate-200 visited:text-slate-300"
     >
       {children}
     </NextLink>
