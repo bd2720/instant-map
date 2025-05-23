@@ -1,4 +1,9 @@
+import type { Metadata } from "next";
 import Link from "../components/link";
+
+export const metadata: Metadata = {
+  title: 'About',
+}
 
 export default function Home() {
   return (

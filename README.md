@@ -1,6 +1,8 @@
 # Instant Map
-### [Try it Now!](https://instant-map.vercel.app/)  
+
 Transform a list of coordinates or addresses into an interactive map feature in seconds!
+
+### [Try it Now!](https://instant-map.vercel.app/)  
 
 ### File Formats
 - CSV
